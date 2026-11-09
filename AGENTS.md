@@ -1,5 +1,33 @@
 # PrayTime · Codex Project Instructions
 
+## Mission 6 scope · 2026-11-09 · current authority
+
+This independent repository is `jhyglory/praytime-mission6`. The current user request
+is Mission 6 STEP 1 only: preserve Mission 5 at
+`6318f53aee405bd62b84e346ca0d9777940a93b9`, establish `main` with the actual project,
+prepare `feature/mission-6-crud`, and record baseline QA in
+`docs/mission6/STEP1_BASELINE.md`. Stop after STEP 1; later functionality requires
+a later user request.
+
+- Push only to `https://github.com/jhyglory/praytime-mission6.git`; verify the
+  remote before every push. Never push to or change Mission 5, PR #1, its Vercel
+  Production, or Figma. No merge, force push, reset, rebase, or deployment.
+- Preserve all existing landing source, copy, styling, components, animation,
+  responsive layout, assets, package versions, lockfile, and tests. STEP 1 changes
+  documentation only. Keep the inherited package name and signup source contract.
+- Never query or change production applicants, run migrations, create Supabase
+  resources, change RLS/storage/environment variables, or make a real signup POST.
+  Do not copy actual `.env*` files or `.vercel` bindings into this repository.
+- Use Node 24.x. Local QA must use `BETA_SIGNUP_PERSISTENCE=disabled` and blank
+  Supabase credentials. Browser QA must use an isolated port and must not reuse a
+  running server whose persistence configuration is unknown.
+- The Mission 5 instructions and release evidence below and in inherited docs
+  are preserved historical context. Their old push/deploy/real-submission
+  authorizations do not authorize those actions in Mission 6. The current user
+  request and this section take precedence wherever those records conflict.
+
+## Preserved Mission 5 instructions · historical context
+
 ## Current task and precedence
 
 Latest release approval2026-11-08: the user approved the reviewed A-copy implementation and now requests commit/push to GitHub and deployment. The prior local-only hold below is satisfied for this release. Keep exactly the verified8groups/7FAQ/form copy, responsive copy-slot/word-wrap adjustments and tests. Commit/push on feature/mission-5-landing, update existing PR #1 ([정하영]-미션5), let the existing Vercel project deploy and verify actual public1440/393/360 screens with GET/HEAD-only QA. Preserve existing Production backend/env/privacy/DB and every motion/asset; no signup POST or DB operation, main/merge/newPR/DNS change. Earlier local-only evidence remains historical; new release evidence belongs in docs/COPY_A_LOCAL.md and PR1.
