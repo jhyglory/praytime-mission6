@@ -155,6 +155,15 @@ normal/reduced-motion/no-JS, keyboard/touch, FAQ/wheel/anchor,
 폼 검사는 disabled 로컬 handler의 503과 intercepted mock 결과를 사용했다.
 실제 운영 신청 POST나 신청자 데이터 접근은 없었다. 기존 3000번 서버는 재사용하지 않았다.
 
+추가로 1440/393/360px의 reduced-motion 전체 페이지·Hero 캡처를 직접 열어 모든
+섹션·주요 에셋·폼·Footer의 보존을 확인했다. 캡처에서 console/pageerror,
+외부/API 요청 시도, 수평 overflow는 모두 0건이었다. 이 정지 화면은 normal-motion
+재생 검증을 대체하지 않으며, 실제 재생은 위 E2E가 검증했다.
+캡처 보조 스크립트는 clipping된 SNS 트랙의 비가시 lazy 이미지까지 기다리는 진단 때문에
+종료 코드 1이었다. 이는 PASS로 계상하지 않았다. 저장된 캡처의 보이는 에셋은 정상이고,
+기존 E2E의 8개 너비 에셋 검사도 통과했다. 이 제한 때문에 제품 소스나 테스트를 수정하지 않았다.
+QA용 3106 서버는 종료했으며, 기존 서버는 그대로 두었다.
+
 실물 기기, Safari, FPS 측정 및 새 배포 QA는 NOT RUN이다. 이번 단계에서는 배포하지 않는다.
 
 비밀 키 정적 검사는 원본의 reachable objects 1,550개 중 987 blobs를 확인했다.
