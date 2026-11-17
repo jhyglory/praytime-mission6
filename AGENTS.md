@@ -1,5 +1,19 @@
 # PrayTime · Codex Project Instructions
 
+## Admin login UI review · 2026-11-17 · current authority
+
+Build the branded frontend at `/admin/login` on `feat/mission6-admin-login-ui`,
+starting from clean `18dcaf5`. Reuse actual PrayTime assets, fonts and tokens.
+The page stays behind the existing Proxy and service gateway. Do not change
+Proxy/authentication/credentials, APIs, Supabase, landing, existing CMS behavior,
+or current deployments/aliases. This task authorizes local implementation and a
+reviewable local commit; no Production deployment or authentication replacement.
+Use a development-only loopback preview with blank backend credentials. The form
+must never claim authentication success or send credentials without an explicit
+future authentication adapter. Show actual rendered screenshots and QA results,
+then request the user's design review. Design approval alone does not authorize
+an authentication migration or Production release.
+
 ## Mission 6 CMS implementation · 2026-11-17 · current authority
 
 The latest user request authorizes the complete prayer-content CMS and public prayer

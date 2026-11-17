@@ -160,6 +160,9 @@ npm run import:prayers -- --apply --publish
 
 ## 알려진 제약과 다음 단계
 
+- 관리자 로그인 UI는 별도 `feat/mission6-admin-login-ui` 브랜치에서 로컬 디자인 검수 중입니다.
+  `/admin/login`의 이메일 인증은 미연결이며 기존 배포·HTTP 게이트는 유지합니다.
+  [화면·실행·QA](docs/mission6/ADMIN_LOGIN_QA.md) · [향후 인증 계획](docs/mission6/ADMIN_LOGIN_AUTH_PLAN.md).
 - 실제 운영 CMS에는 아직 사용자별 관리자 인증·역할·감사 로그가 없습니다. 현재 쓰기는 비민감 Demo에 한정합니다.
 - 기존 사전예약 UI·어댑터는 보존하지만 미션 6 데모의 사전예약 저장은 disabled입니다. 기존 미션 5 Production은 변경하지 않았습니다.
 - Storage와 DB는 한 트랜잭션이 아니므로 보상 처리와 정리 경고가 있습니다. 실패 경고가 남으면 관리자 점검이 필요합니다.
