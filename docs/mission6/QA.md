@@ -12,6 +12,9 @@
 - 기존 랜딩에서는 `voluntary-prayer-section.tsx`의 기존 “기도 가이드” 문구만
   `/prayers` 링크로 연결했다. 문구·공간·모션과 기존 이미지/폰트는 유지했다.
 - 미션 5 원본 저장소·PR·Production·Figma·native 파일·신청 DB는 수정하지 않았다.
+- STEP 1 당시 확인한 원본 구현은 `6318f53`이며 독립 미션 6 기준선은 위 SHA다.
+  최종 확인 시 원본 구현 브랜치의 추가 커밋 `6b47e77`(스타일 리팩터링)을 확인했다.
+  이번 CMS 범위에 원본 재동기화는 포함되지 않으므로 이 리팩터링은 가져오지 않았다.
 
 ## 실행한 코드 검사
 
@@ -22,7 +25,7 @@
 | `npm run lint` | PASS | 종료 코드 0, warnings 0 |
 | `npm run typecheck` | PASS | 종료 코드 0 |
 | `npm run test` | PASS | 10 files / 129 tests |
-| `npm run build -- --webpack` | PASS | 최종 UI 수정 후 다시 빌드; 모든 신규 라우트·Proxy 생성 |
+| `npm run build -- --webpack` | PASS | 최종 UI·Origin 수정 후 빌드; 모든 신규 라우트·Proxy 생성 |
 | `npm run import:prayers -- --validate-only` | PASS | 실제 JSON 100개, 8개 카테고리, SHA 일치; DB 접근 없음 |
 | 기존 + 신규 Browser E2E | PASS · 실행 구분 | 최초 71 PASS/3 locator FAIL → 해당 3개 PASS; 최종 신규 7개 PASS |
 | 실제 공개 CMS HTTP/브라우저 | PASS | 3107 실제 GET; 100개 원문/8분류/pagination 및 1440/393 체험 |
@@ -64,7 +67,9 @@ locator가 Next route announcer도 찾는 strict locator 오류였으며 실제 
   private `source_payload` 직접 조회는 HTTP 401로 거부됐다.
 - 실제 `pg_policies`에는 published 기도문 SELECT와 해당 이미지 SELECT 두 개만 있다.
   공개 INSERT/UPDATE/DELETE 정책은 없다. RLS를 해제하지 않았다.
-- 보안 Advisor: migration 후 경고 0건.
+- 보안 Advisor: migration 후와 최종 점검에서 모두 경고 0건.
+  최종 DB는 전체/게시/native/source_key 고유 개수 각각 100개이며, private bucket의
+  2,097,152-byte 제한과 JPEG/PNG/WebP 설정 및 두 SELECT 정책을 재확인했다.
 - 이후 원본 JSON·payload·모든 매핑 필드가 일치하는 행만 조건부 SQL로 공개했다.
   verified native templates 100개, published 전환 100개. 기도문 내용/ID는 그대로다.
   이는 연결 도구로 수행한 공개 상태 변경이며 importer CLI 성공으로 계상하지 않는다.
@@ -112,16 +117,68 @@ QA 행 잔여 0, 파일 잔여 0, SDK fallback 정리 0이었다. 전용 3108 �
 
 ## 배포·평가자 접근
 
-- 기존 Vercel CLI 저장 인증으로 프로젝트 조회를 시도했으나 HTTP 403이었다.
-- 공식 Vercel CLI가 기존 refresh 인증을 갱신해 정상화했다. 별도 Mission 6 프로젝트를
-  Node 24 / webpack build / Standard Deployment Protection으로 생성했다.
-- 현재 Preview와 Production 관리자 모드는 disabled다. 서버 Secret은 Preview에만
-  설정했다. 아직 배포하지 않았으므로 Vercel 실환경 전체 흐름은 **NOT RUN**이다.
-- 보호된 Preview의 실제 접근 제한을 먼저 확인한 뒤 평가용 Demo 쓰기를 허용한다.
-  기존 Mission 5 Production과 DNS는 변경하지 않는다.
-- 접근 제한을 검증하지 못한 배포는 `CMS_ADMIN_MODE=disabled`로 유지한다.
-  보호된 평가용 Preview만 Demo 확인·서비스 접근 제한·비공개 게이트 키로 허용한다.
-- 배포 URL이나 평가용 비밀정보를 임의로 만들어 기록하지 않는다.
+공식 Vercel CLI가 기존 refresh 인증을 갱신해 초기 403을 해결했다. 별도 Mission 6
+프로젝트를 Node 24 / webpack build / Standard Deployment Protection으로 생성했다.
+처음 CLI deploy의 기본 대상이 새 프로젝트의 Production이었으며, 확인 시 이미 READY였다.
+이 초기 배포는 관리자 disabled·서버 Secret 미배치의 읽기 전용이었다. 이후 평가용 배포는
+`--environment preview`를 명시했고, 쓰기 활성화 전에 실제 접근 제한부터 확인했다.
+기존 Mission 5 Production·환경 변수·DNS는 수정하지 않았다.
+
+| 배포 | 실행 코드 | 실제 결과 |
+| --- | --- | --- |
+| [공개 Production](https://praytime-mission6.vercel.app/) | `8b9c08d` | 기도 체험 공개, 관리자 disabled |
+| [보호된 Preview](https://praytime-mission6-e2emx9f46-glorifier1.vercel.app/admin/prayers) | `8b9c08d` | Vercel 접근 제한 + 비공개 HTTP 게이트 + Demo CRUD |
+
+Production deployment: `dpl_3h6E7G52uUnL1vmsq2eMCBF7RkB2`.
+평가용 Preview deployment: `dpl_9qWUrpxSFibBXNxKUKwvadqzTnyA`.
+공개 구현 코드의 전체 SHA: `8b9c08dec498eee6741d30f865d19938486283eb`.
+이후 문서 마감 커밋은 실행 소스/에셋/lockfile을 변경하지 않는다.
+
+- Preview 초기 disabled 배포에서 무인증 302, provider 접근 후 ADMIN_DISABLED 403,
+  공개 실제 count 100을 확인한 뒤에만 보호된 Demo 모드를 활성화했다.
+- 최종 Preview에서 무인증 302, provider 접근만 있으면 앱 401, 잘못된 Basic 키 401,
+  두 제한을 통과하면 관리자 200/100개를 확인했다.
+- **Vercel 실제 HTTP·DB·Storage 76/76 PASS**: 로컬 73개 시나리오와 접근 경계 3개.
+  QA 행 2개만 생성·삭제했고, native 100개 전체 필드/UUID 해시 동일,
+  QA 행 0/소유 파일 0/fallback 청소 0으로 복구했다.
+- **Vercel 실제 Browser 32/32 PASS**: Mock 없이 실제 폼 등록·PNG 업로드·새로고침,
+  수정/게시·공개 본문/이미지 반영·기도 타이머·완료·삭제 취소/확정·404를 확인했다.
+  생성한 OWN UUID 1개만 사용했고 전체 100→100, 해당 Storage 파일 0개로 복구했다.
+  Console/pageerror/warning/금지 요청은 0이었다.
+- **공개 Production 실제 1440/393 PASS**: 실제 published 100개와 native 원문 일치,
+  분류·페이지·상세·타이머·완료, 랜딩 8개 section/FAQ 7개/local font/원본 artwork,
+  실제 PRAYER 진입 링크를 확인했다. 각 폭의 CMS GET 7개 모두 200,
+  console/경고/쓰기/브라우저 저장/overflow/실패 응답은 0이었다.
+- **Tablet 실제 6/6 PASS**: 768/1024의 공개 목록·보호 관리자 목록/등록폼에서
+  패널/입력 9개/헤더/업로드 label/main H1/overflow/console을 GET-only로 확인했다.
+- 공개 Production 관리자 화면/API GET과 관리자 POST는 403이었다.
+  `/.env.local`, `/MISSION6_REVIEW_ACCESS.txt`는 404였다. 기존 Mission 5 HEAD는 200이었다.
+- Provider 환경 변수 metadata에서 서버 Secret·게이트 키가 Preview 전용임을 확인했다.
+  Production에는 공개 읽기 키만 있고 관리자 모드는 disabled다.
+- 문서 마감 시 실제 키 5개를 기준으로 소스 578개·클라이언트 JS 46개를 검사하여
+  키 일치 0건이었다. `.env.local`은 권한 600/ignored/untracked이며 비공개 평가 안내도 권한 600이다.
+- 비공개 평가 링크가 접근 쿠키를 설정하고 앱 HTTP 게이트 401로 이동하는 것도 확인했다.
+  링크·키는 저장소 밖 소유자용 안내 파일에만 저장했다. [공개 접근 안내](ACCESS.md).
+
+스크린샷·진단 원본은 작업 디렉터리 `work/mission6-production-public`,
+`work/mission6-vercel-ui`, `work/mission6-vercel-admin`, `work/mission6-tablet`에 보존했다.
+검사 중 사용한 로컬 서버·브라우저는 모두 종료했고 기존 사용자 서버는 재사용하지 않았다.
+
+## WBS 완료 상태
+
+| ID | 작업 | 결과 |
+| --- | --- | --- |
+| W01 | 기존 코드·디자인 분석 | 완료 |
+| W02 | 원본 기도 가이드·데이터 구조 | 완료 |
+| W03 | 실제 Supabase 연결·기존 100개 보존 | 완료 |
+| W04 | 관리자 목록·상세·등록 | 완료 |
+| W05 | 수정·삭제·실제 영속성 | 완료 |
+| W06 | private Storage 대표 이미지 | 완료 |
+| W07 | 검증·상태·페이지네이션 | 완료 |
+| W08 | 사용자 기도 체험 | 완료 |
+| W09 | Preview 보호·공개 읽기 전용 배포 | 완료 |
+| W10 | 실제 QA·README | 완료 |
+| W11 | URL·평가 접근·제출 준비 | 완료 · 외부 과제 제출 자체는 하지 않음 |
 
 ## 제한
 

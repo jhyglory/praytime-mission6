@@ -6,10 +6,12 @@ PrayTime은 SNS를 열기 전 잠깐 멈추고 기도한 뒤, 지금 필요한 �
 
 ## 저장소와 배포
 
-- GitHub: [jhyglory/praytime-mission6](https://github.com/jhyglory/praytime-mission6)
+- GitHub: [Mission 6 구현 브랜치](https://github.com/jhyglory/praytime-mission6/tree/feat/mission6-prayer-cms)
 - 작업 브랜치: `feat/mission6-prayer-cms`
 - 보존 기준: `5d815a08365926566cc32c0a108634302e8e05b8` ([STEP 1](docs/mission6/STEP1_BASELINE.md))
-- Mission 6 Vercel URL: **보호된 Preview 배포 준비 중**. 공식 CLI의 인증 갱신과 별도 Mission 6 프로젝트/Node 24 설정을 완료했습니다. 과거 Mission 5 URL을 이번 배포 결과로 표시하지 않습니다.
+- 공개 Vercel: [PrayTime Mission 6](https://praytime-mission6.vercel.app/) · [기도 체험](https://praytime-mission6.vercel.app/prayers)
+- 관리자: [보호된 Preview](https://praytime-mission6-e2emx9f46-glorifier1.vercel.app/admin/prayers). 평가용 접근 정보는 비공개로 별도 전달합니다. [접근 구조와 평가 순서](docs/mission6/ACCESS.md)
+- `main`의 STEP 1 기준선은 유지하며 실제 미션 6 코드는 위 작업 브랜치에 있습니다. 배포 실행 코드 SHA는 `8b9c08dec498eee6741d30f865d19938486283eb`이며 이후 마감 커밋은 문서만 변경합니다.
 - Mission 5 저장소·PR #1·Production·신청 DB·Figma·native 앱 파일은 수정하지 않습니다.
 
 ## 구현 범위
@@ -150,11 +152,14 @@ npm run import:prayers -- --apply --publish
 - 실제 공개 조회·카테고리·페이지네이션·기도 체험: PASS, Desktop/Mobile에서 실제 CMS GET 사용.
 - Lint·Typecheck·Build 및 Unit 129개: PASS. Browser 검증 과정과 보정·재실행은 QA 문서에 구분합니다.
 - 실제 관리자 HTTP·DB·Storage QA 73개: PASS. 별도 QA 행/이미지는 생성·검증 후 모두 정리했고 기존 100개를 보존했습니다.
-- 보호된 Preview 배포: 최종 검증 진행 중.
+- 보호된 Preview 실제 API·Storage 76개와 실제 브라우저 폼·기도 체험 32개: PASS.
+- 공개 Production의 1440/393 실제 흐름 및 Tablet 768/1024 공개·관리자 반응형: PASS.
+- 공개 Production 관리자 GET/POST 403, 비공개 파일 404, 실제 서버 키의 Preview 전용 배치를 확인했습니다.
 
 ## 알려진 제약과 다음 단계
 
 - 실제 운영 CMS에는 아직 사용자별 관리자 인증·역할·감사 로그가 없습니다. 현재 쓰기는 비민감 Demo에 한정합니다.
+- 기존 사전예약 UI·어댑터는 보존하지만 미션 6 데모의 사전예약 저장은 disabled입니다. 기존 미션 5 Production은 변경하지 않았습니다.
 - Storage와 DB는 한 트랜잭션이 아니므로 보상 처리와 정리 경고가 있습니다. 실패 경고가 남으면 관리자 점검이 필요합니다.
 - 공개 표지는 짧은 서명 URL을 사용합니다. 게시 중지 직후의 즉시 URL 철회는 제공하지 않습니다.
 - 실물 기기·Safari·실제 모바일 네이티브 연동은 별도 검증 항목입니다.
