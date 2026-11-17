@@ -217,3 +217,22 @@ Production deployment: `dpl_3h6E7G52uUnL1vmsq2eMCBF7RkB2`.
   실제 자격·전용 접근 링크를 공개 README나 Git에 기록하지 않았다.
 - 원본 결과: 저장소 밖 `work/mission6-gateway-rotation-results.json`,
   `work/mission6-gateway-deployment-results.json`, `work/mission6-gateway-browser/results.json`.
+
+## 삭제 확인창 중앙 정렬 · 2026-11-17
+
+- 기존 실제 배포에서 기본 여백 초기화로 dialog의 computed margin이 0이며 x=0/y=0에
+  표시되는 문제를 재현했다. 데스크톱·모바일 첫/마지막 행 4개에서 모두 확인했다.
+- `.m6-dialog`에 viewport 기준 fixed/inset/margin과 내용 높이·최대 높이를 명시했다.
+  기존 `<dialog>`와 삭제 확인·취소·포커스 처리 및 데이터 처리 코드는 그대로다.
+- webpack Build PASS. 기존 삭제 확인·취소·삭제 후 새로고침 UI 계약 E2E 1개 PASS
+  (API intercept; 실제 기도문을 삭제하는 테스트가 아님).
+- 실제 Preview에서 1440×900·768×1024·393×852 첫/마지막 행 총 6개 모두
+  화면 중심과의 가로·세로 오차 0px, viewport 안 표시, 취소/Escape·포커스 복귀 PASS.
+  Console/error/warning/pageerror 및 쓰기 요청은 모두 0이다. 실제 데이터 삭제는 하지 않았다.
+- 검증 후 관리자 고정 주소를 새 Preview `dpl_5mg53jMaccGNdqfXW66iFBtGnNNQ`
+  (실행 코드 `60f63f1`)로 연결했다. 공개 Production과 미션 5 배포는 변경하지 않았다.
+- 카테고리 문의도 읽기 전용으로 확인했다. 관리자/공개 100개의 category/category_full은
+  native와 불일치 0이며 전체 8분류다. 기본 관리자 화면의 필터 값과 URL query는 비어 있고,
+  실제 첫 페이지 10행에는 신앙·관계·마음·돈·일·성장 5분류가 표시되어 문의 현상은
+  재현되지 않았다. 해당 사용자 화면의 URL/필터 상태를 요청했으며 데이터는 수정하지 않았다.
+- 원본 결과와 캡처: 저장소 밖 `work/mission6-dialog-center/`.
