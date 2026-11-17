@@ -24,13 +24,14 @@
 | `npm ci` | PASS | lockfile 유지, 425 packages, audit 0 vulnerabilities |
 | `npm run lint` | PASS | 종료 코드 0, warnings 0 |
 | `npm run typecheck` | PASS | 종료 코드 0 |
-| `npm run test` | PASS | 10 files / 129 tests |
+| `npm run test` | PASS | 최초 129개, 게이트 변경 후 10 files / 134 tests |
 | `npm run build -- --webpack` | PASS | 최종 UI·Origin 수정 후 빌드; 모든 신규 라우트·Proxy 생성 |
 | `npm run import:prayers -- --validate-only` | PASS | 실제 JSON 100개, 8개 카테고리, SHA 일치; DB 접근 없음 |
 | 기존 + 신규 Browser E2E | PASS · 실행 구분 | 최초 71 PASS/3 locator FAIL → 해당 3개 PASS; 최종 신규 7개 PASS |
 | 실제 공개 CMS HTTP/브라우저 | PASS | 3107 실제 GET; 100개 원문/8분류/pagination 및 1440/393 체험 |
 
-Unit에는 기존 60개, importer 14개, CMS/backend 55개가 포함된다.
+최초 Unit에는 기존 60개, importer 14개, CMS/backend 55개가 포함된다.
+사용자 지정 게이트 검사 5개 추가 후 전체 134개를 다시 실행해 통과했다.
 CMS 검사는 공개 필드 whitelist/draft 404, 관리자 환경·Demo·공유 게이트·CSRF,
 제목/본문·MIME/magic/2MB·실제 스트림 크기, 요청 지문, 중복·동시 수정 충돌,
 업로드 보상 처리, DB 응답 유실·정리 실패 경고를 검증한다.
@@ -117,6 +118,9 @@ QA 행 잔여 0, 파일 잔여 0, SDK fallback 정리 0이었다. 전용 3108 �
 
 ## 배포·평가자 접근
 
+이 절은 최초 통합 배포의 검증 이력이다. 현재 관리자 주소와 사용자 지정 접근 정보 변경은
+아래 「관리자 접근 정보 변경」 기록을 따른다.
+
 공식 Vercel CLI가 기존 refresh 인증을 갱신해 초기 403을 해결했다. 별도 Mission 6
 프로젝트를 Node 24 / webpack build / Standard Deployment Protection으로 생성했다.
 처음 CLI deploy의 기본 대상이 새 프로젝트의 Production이었으며, 확인 시 이미 READY였다.
@@ -127,7 +131,7 @@ QA 행 잔여 0, 파일 잔여 0, SDK fallback 정리 0이었다. 전용 3108 �
 | 배포 | 실행 코드 | 실제 결과 |
 | --- | --- | --- |
 | [공개 Production](https://praytime-mission6.vercel.app/) | `8b9c08d` | 기도 체험 공개, 관리자 disabled |
-| [보호된 Preview](https://praytime-mission6-e2emx9f46-glorifier1.vercel.app/admin/prayers) | `8b9c08d` | Vercel 접근 제한 + 비공개 HTTP 게이트 + Demo CRUD |
+| 최초 보호된 Preview (현재 퇴역) | `8b9c08d` | 당시 Vercel 접근 제한 + 비공개 HTTP 게이트 + Demo CRUD |
 
 Production deployment: `dpl_3h6E7G52uUnL1vmsq2eMCBF7RkB2`.
 평가용 Preview deployment: `dpl_9qWUrpxSFibBXNxKUKwvadqzTnyA`.
@@ -188,3 +192,28 @@ Production deployment: `dpl_3h6E7G52uUnL1vmsq2eMCBF7RkB2`.
 없으므로 보상 처리 실패/결과 불확실 경고는 운영자가 점검해야 한다.
 설치 시 기존 ESLint 지원 종료와 fsevents 선택 설치 스크립트 안내가 있었으며,
 잠금 버전·승인 설정을 임의로 바꾸지 않았다.
+
+## 관리자 접근 정보 변경 · 2026-11-17
+
+사용자의 명시적 요청으로 평가용 HTTP 게이트의 사용자 이름과 비밀번호를 변경했다.
+실제 값은 저장소 밖 비공개 접근 안내와 서버 전용 환경 설정에만 보관한다.
+서버에는 비밀번호 원문 대신 `CMS_ADMIN_PASSWORD_SHA256`을 배치한다.
+사용자 지정 설정이 있으면 기존 공유 키는 허용하지 않으며, 일부 설정만 있거나
+형식이 잘못되면 403으로 차단한다. 사용자명·비밀번호 검사는 고정 길이 digest로 비교한다.
+
+- 관리자 고정 주소: [관리자 Preview](https://praytime-mission6-admin.vercel.app/admin/prayers).
+- 실행 코드: `7f70054`, Preview deployment: `dpl_HLW49z4HTByE1ozoPhcs88obTZJU`.
+- Lint·Typecheck·webpack Build: PASS. 전체 Unit 10 files / 134 tests PASS.
+  게이트 집중 검사 29개에는 새 자격 허용·이전 자격 거부·부분/잘못된 설정 차단이 포함된다.
+- 새 배포 URL과 관리자 고정 주소에서 각각 실제 HTTP 13/13 PASS:
+  provider 302·접근 정보 누락/이전 값/오답 401·새 자격 200·다른 Origin 쓰기 403,
+  QA 전용 초안 등록·재조회·수정·삭제·404·공개 비노출을 확인했다. 각 실행은 100→100으로 복구했다.
+- 고정 주소에서도 Vercel 접근 제한 302와 앱 게이트 401이 유지되는지 별도로 확인했다.
+- 실제 브라우저 GET 8/8 PASS: 새 접근 정보로 관리자 200·실제 100개·등록폼 200,
+  console/pageerror/warning/쓰기 시도 0. 브라우저는 종료했다.
+- 이전 자격이 배포에 남아 있지 않도록 검증이 끝난 후 이전 관리자 Preview만 퇴역시켰다.
+  공개 Production 및 기존 미션 5 배포·데이터는 변경하지 않았다.
+- 실제 새 비밀번호·digest와 서버용 키를 소스 578개·클라이언트 JS 46개에서 검색해 일치 0건.
+  실제 자격·전용 접근 링크를 공개 README나 Git에 기록하지 않았다.
+- 원본 결과: 저장소 밖 `work/mission6-gateway-rotation-results.json`,
+  `work/mission6-gateway-deployment-results.json`, `work/mission6-gateway-browser/results.json`.

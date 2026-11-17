@@ -10,7 +10,7 @@ PrayTime은 SNS를 열기 전 잠깐 멈추고 기도한 뒤, 지금 필요한 �
 - 작업 브랜치: `feat/mission6-prayer-cms`
 - 보존 기준: `5d815a08365926566cc32c0a108634302e8e05b8` ([STEP 1](docs/mission6/STEP1_BASELINE.md))
 - 공개 Vercel: [PrayTime Mission 6](https://praytime-mission6.vercel.app/) · [기도 체험](https://praytime-mission6.vercel.app/prayers)
-- 관리자: [보호된 Preview](https://praytime-mission6-e2emx9f46-glorifier1.vercel.app/admin/prayers). 평가용 접근 정보는 비공개로 별도 전달합니다. [접근 구조와 평가 순서](docs/mission6/ACCESS.md)
+- 관리자: [보호된 Preview](https://praytime-mission6-admin.vercel.app/admin/prayers). 평가용 접근 정보는 비공개로 별도 전달합니다. [접근 구조와 평가 순서](docs/mission6/ACCESS.md)
 - `main`의 STEP 1 기준선은 유지하며 실제 미션 6 코드는 위 작업 브랜치에 있습니다. 공개 배포 실행 코드 SHA는 `8b9c08dec498eee6741d30f865d19938486283eb`입니다. 관리자 게이트 변경과 Preview 검증 이력은 QA 문서를 따릅니다.
 - Mission 5 저장소·PR #1·Production·신청 DB·Figma·native 앱 파일은 수정하지 않습니다.
 
@@ -152,7 +152,7 @@ npm run import:prayers -- --apply --publish
 - 공개 RLS 실연결 검사: draft 100개에서 공개 조회 0개, private provenance 조회 거부 확인.
 - 서버 키 연결 및 실제 Import dry-run/적용/재실행: PASS. 기존 100개 일치, 중복/충돌/실패 0개.
 - 실제 공개 조회·카테고리·페이지네이션·기도 체험: PASS, Desktop/Mobile에서 실제 CMS GET 사용.
-- Lint·Typecheck·Build 및 Unit 129개: PASS. Browser 검증 과정과 보정·재실행은 QA 문서에 구분합니다.
+- Lint·Typecheck·Build 및 Unit 134개: PASS. Browser 검증 과정과 보정·재실행은 QA 문서에 구분합니다.
 - 실제 관리자 HTTP·DB·Storage QA 73개: PASS. 별도 QA 행/이미지는 생성·검증 후 모두 정리했고 기존 100개를 보존했습니다.
 - 보호된 Preview 실제 API·Storage 76개와 실제 브라우저 폼·기도 체험 32개: PASS.
 - 공개 Production의 1440/393 실제 흐름 및 Tablet 768/1024 공개·관리자 반응형: PASS.

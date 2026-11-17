@@ -12,7 +12,7 @@ disabled이며, 미션 5 원본 Production·신청 저장소는 변경하지 않
 
 ## 보호된 평가용 관리자
 
-[관리자 Preview](https://praytime-mission6-e2emx9f46-glorifier1.vercel.app/admin/prayers)는
+[관리자 Preview](https://praytime-mission6-admin.vercel.app/admin/prayers)는
 별도의 비민감 Demo이다. 프로젝트 접근 제한과 서비스 HTTP 게이트를 모두 통과해야 한다.
 사용자별 계정·회원가입·앱 로그인·역할 테이블을 구현한 것이 아니다.
 
@@ -59,8 +59,9 @@ Deployment Protection/Preview 환경 설정에서 처리하고 새 Preview를 �
   비밀번호 원문이나 digest는 저장소·브라우저에 포함하지 않는다. 사용자 지정 값이
   설정되면 기존 `demo` 공유 키는 허용하지 않으며, 불완전한 설정은 접근을 차단한다.
 - 실제 HTTP·Storage 검증과 정리 결과는 [QA](QA.md)를 따른다.
-- 실행 코드 SHA: `8b9c08dec498eee6741d30f865d19938486283eb`.
-- Preview 실제 API/Storage 76개·브라우저 32개, 공개 Desktop/Mobile 및 Tablet 6개 검증을 완료했다.
+- 공개 실행 코드는 `8b9c08d`, 사용자 지정 게이트를 적용한 관리자 실행 코드는 `7f70054`다.
+- 최초 통합 검증은 Preview 실제 API/Storage 76개·브라우저 32개, 공개 Desktop/Mobile 및
+  Tablet 6개다. 접근 정보 변경 후 검증 결과는 [QA](QA.md)의 별도 기록을 따른다.
 
 공식 운영 참고: [Vercel Deployment Protection](https://vercel.com/docs/deployment-protection),
 [보호된 배포의 자동화 접근](https://vercel.com/docs/deployment-protection/methods-to-bypass-deployment-protection/protection-bypass-automation).
