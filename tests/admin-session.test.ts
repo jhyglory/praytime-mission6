@@ -318,7 +318,7 @@ describe("protected routing and Basic compatibility", () => {
   it("requires a cookie for pages even when browser Basic credentials were cached", () => {
     const response = proxy(new NextRequest(`${ORIGIN}/admin/prayers`, { headers: { authorization: basic() } }));
     expect(response.status).toBe(303);
-    expect(response.headers.get("Location")).toBe("/admin/login");
+    expect(response.headers.get("Location")).toBe(`${ORIGIN}/admin/login`);
     expect(response.headers.get("WWW-Authenticate")).toBeNull();
     expect(proxy(new NextRequest(`${ORIGIN}/admin/prayers`, {
       headers: { cookie: `${adminSessionCookieName()}=${token()}` },
@@ -341,7 +341,7 @@ describe("protected routing and Basic compatibility", () => {
       headers: { cookie: `${adminSessionCookieName()}=${token()}` },
     }));
     expect(loggedIn.status).toBe(303);
-    expect(loggedIn.headers.get("Location")).toBe("/admin/prayers");
+    expect(loggedIn.headers.get("Location")).toBe(`${ORIGIN}/admin/prayers`);
   });
   it("leaves direct login routes closed when the Preview mode or protection verification is absent", () => {
     for (const variable of ["CMS_DEMO_ENV", "CMS_DEPLOYMENT_PROTECTION"]) {
