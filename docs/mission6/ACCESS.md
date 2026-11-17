@@ -28,8 +28,9 @@
 기존에 정한 아이디를 사용하며 이메일 계정을 임의 생성하지 않는다. 성공 응답 후 브라우저가
 실제 쿠키를 수용했는지 GET 세션 확인까지 통과해야 관리자 화면으로 이동한다.
 
-멘토 전용 링크에서는 서버에 설정한 멘토 아이디만 자동 입력된다. 비밀번호는 항상 비어 있고
-자동 로그인 요청은 보내지 않는다. 비밀번호는 별도로 전달하며 URL에 넣지 않는다.
+멘토 전용 링크에서는 서버에 설정한 멘토 아이디만 자동 입력된다. 서버는 비밀번호 초깃값을
+전달하지 않으며 자동 로그인 요청은 보내지 않는다. 비밀번호는 별도로 전달하며 URL에 넣지 않는다.
+비밀번호 자동 입력은 본인 브라우저 비밀번호 관리자에 저장한 로그인 정보를 사용한다.
 소유자와 멘토는 별도 자격·서명으로 같은 평가용 Demo CMS에 접근한다.
 
 | 상태 | 동작 |
@@ -59,7 +60,7 @@ DELETE는 로그아웃이며 쓰기 요청에는 동일 Origin과 크기 제한�
 ## 설정과 한계
 
 - Vercel 프로젝트는 기존 `praytime-mission6`, Node 24 / webpack을 유지한다.
-- 관리자 실행 코드 `c0d950d`, Preview `dpl_A452LX6AurhAHXvSFp8coujLjRTX`.
+- 관리자 실행 코드 `b04577b`, Preview `dpl_HxvmNEN5XdvUa4TFoiB5pyb8qfXG`.
 - 브랜치 `feat/mission6-mentor-access`. 후보·고정 주소의 실제 로그인과 기존 소유자 세션 유지 PASS.
 - 공개 Production은 기존 `8b9c08d`와 disabled 관리자 모드를 유지한다.
 - 서버 자격 hash와 랜덤 `CMS_ADMIN_SESSION_SECRET`은 Preview 전용 encrypted 환경 변수다.
@@ -72,7 +73,7 @@ DELETE는 로그아웃이며 쓰기 요청에는 동일 Origin과 크기 제한�
   세션을, 공통 서명키 교체는 두 계정 세션을 무효화한다. 옛 immutable 배포도 별도로 관리한다.
 - 회원별 권한·Supabase Auth·회원 관리·DB schema·Storage 변경은 하지 않았다.
 
-[멘토 접근과 최신 검증](MENTOR_ACCESS.md) · [이전 소유자 로그인 검증](ADMIN_SESSION_QA.md) · [구조와 다음 인증 단계](ADMIN_LOGIN_AUTH_PLAN.md)
+[최신 비밀번호 변경·자동 입력 안내](MENTOR_PASSWORD_UPDATE.md) · [최초 멘토 접근 검증](MENTOR_ACCESS.md) · [이전 소유자 로그인 검증](ADMIN_SESSION_QA.md) · [구조와 다음 인증 단계](ADMIN_LOGIN_AUTH_PLAN.md)
 
 공식 참고: [Vercel 보호 쿠키 진입](https://vercel.com/docs/deployment-protection/methods-to-bypass-deployment-protection/protection-bypass-automation),
 [Next.js 인증](https://nextjs.org/docs/app/guides/authentication).

@@ -155,7 +155,7 @@ npm run import:prayers -- --apply --publish
 - 공개 RLS 실연결 검사: draft 100개에서 공개 조회 0개, private provenance 조회 거부 확인.
 - 서버 키 연결 및 실제 Import dry-run/적용/재실행: PASS. 기존 100개 일치, 중복/충돌/실패 0개.
 - 실제 공개 조회·카테고리·페이지네이션·기도 체험: PASS, Desktop/Mobile에서 실제 CMS GET 사용.
-- 최신 멘토 접근: Lint·Typecheck·webpack Build 및 Unit 15 files / 260개 PASS. 후보·고정 주소에서 멘토/소유자 실제 로그인과 배포 전 소유자 세션 유지 PASS. [최신 검증](docs/mission6/MENTOR_ACCESS.md). 이전 [소유자 로그인 검증 215개](docs/mission6/ADMIN_SESSION_QA.md)와 구분합니다.
+- 멘토 최초 구축: Lint·Typecheck·webpack Build 및 Unit 15 files / 260개 PASS. 후보·고정 주소에서 멘토/소유자 실제 로그인과 배포 전 소유자 세션 유지 PASS. [최초 검증](docs/mission6/MENTOR_ACCESS.md). 이후 비밀번호 변경·브라우저 저장 지원의 별도 검사와 배포는 [최신 기록](docs/mission6/MENTOR_PASSWORD_UPDATE.md)을 따릅니다.
 - 실제 관리자 HTTP·DB·Storage QA 73개: PASS. 별도 QA 행/이미지는 생성·검증 후 모두 정리했고 기존 100개를 보존했습니다.
 - 보호된 Preview 실제 API·Storage 76개와 실제 브라우저 폼·기도 체험 32개: PASS.
 - 공개 Production의 1440/393 실제 흐름 및 Tablet 768/1024 공개·관리자 반응형: PASS.
@@ -165,7 +165,7 @@ npm run import:prayers -- --apply --publish
 
 - 관리자 로그인 UI는 별도 `feat/mission6-admin-login-ui` 브랜치에서 2026-11-17 사용자 디자인 승인을 받았습니다.
   이후 사용자의 실제 로그인 요청에 따라 기존 아이디로 서버 세션을 연결했습니다.
-  [현재 멘토·소유자 로그인 검증](docs/mission6/MENTOR_ACCESS.md) · [구조와 향후 인증 계획](docs/mission6/ADMIN_LOGIN_AUTH_PLAN.md).
+  [현재 비밀번호 변경·브라우저 저장 지원](docs/mission6/MENTOR_PASSWORD_UPDATE.md) · [구조와 향후 인증 계획](docs/mission6/ADMIN_LOGIN_AUTH_PLAN.md).
 - 세션은 stateless이므로 복사된 토큰의 개별 즉시 철회는 제공하지 않습니다. 해당 계정의 자격 교체는 해당 계정 세션을, 공통 서명키 교체는 두 계정 세션을 현재 배포에서 무효화합니다. 시도 제한의 앱 카운터는 인스턴스별이며 전역 강제 제한으로 간주하지 않습니다.
 - 실제 운영 CMS에는 아직 사용자별 관리자 인증·역할·감사 로그가 없습니다. 현재 쓰기는 비민감 Demo에 한정합니다.
 - 기존 사전예약 UI·어댑터는 보존하지만 미션 6 데모의 사전예약 저장은 disabled입니다. 기존 미션 5 Production은 변경하지 않았습니다.
