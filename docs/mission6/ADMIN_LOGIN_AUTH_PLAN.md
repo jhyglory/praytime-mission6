@@ -81,6 +81,9 @@ Cookie 존재나 클라이언트 상태만으로 인증하지 않는다.
 
 ## 실제 폼 연결
 
+최신 멘토 전용 링크는 [별도 암호화 grant](MENTOR_LINK_PREFILL.md)를 검증한 뒤에만 두 입력값을
+전달한다. 입력용 쿠키는 앱 세션이 아니며, 자동 제출 없이 아래 실제 인증 절차를 유지한다.
+
 `AdminLoginAuthenticator`는 `{ username, password }`와 `AbortSignal`을 받는다.
 현재 페이지는 `AdminLoginConnected`를 통해 실제 `/api/admin/session` 어댑터를
 전달한다. 폼의 optional 어댑터 구조는 재사용을 위한 계약이며, 현재 페이지가

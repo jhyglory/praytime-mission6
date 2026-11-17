@@ -6,8 +6,8 @@ PrayTime은 SNS를 열기 전 잠깐 멈추고 기도한 뒤, 지금 필요한 �
 
 ## 저장소와 배포
 
-- GitHub: [Mission 6 구현 브랜치](https://github.com/jhyglory/praytime-mission6/tree/feat/mission6-mentor-access)
-- 작업 브랜치: `feat/mission6-mentor-access` (실제 관리자 로그인에서 멘토 평가용 접근 추가)
+- GitHub: [Mission 6 구현 브랜치](https://github.com/jhyglory/praytime-mission6/tree/feat/mission6-mentor-link-prefill)
+- 작업 브랜치: `feat/mission6-mentor-link-prefill` (멘토 전용 링크에서 두 로그인 필드 자동 입력)
 - 보존 기준: `5d815a08365926566cc32c0a108634302e8e05b8` ([STEP 1](docs/mission6/STEP1_BASELINE.md))
 - 공개 Vercel: [PrayTime Mission 6](https://praytime-mission6.vercel.app/) · [기도 체험](https://praytime-mission6.vercel.app/prayers)
 - 관리자: [보호된 로그인](https://praytime-mission6-admin.vercel.app/admin/login). 처음에는 비공개 전용 진입 링크로 Vercel 접근 쿠키를 받은 뒤 기존 아이디·비밀번호로 로그인합니다. [접근 구조와 평가 순서](docs/mission6/ACCESS.md)
@@ -136,7 +136,7 @@ npm run import:prayers -- --apply --publish
 
 `/admin/prayers`에서 목록·필터·페이지를 확인하고 등록·상세·수정·삭제를 진행합니다. 삭제는 확인 Dialog에서만 실행되며, **게시 중지(draft)**와 영구 삭제는 구분합니다. 충돌 409에서는 입력을 보존하고 최신 데이터를 확인한 뒤 다시 저장합니다.
 
-관리자는 loopback 로컬 또는 별도 보호된 Demo Preview에서만 동작합니다. 보호된 Preview는 비공개 진입 링크로 Vercel 접근 쿠키를 받은 뒤 `/admin/login`에서 아이디·비밀번호를 서버 검증합니다. 성공 시 HttpOnly·Secure·SameSite=Lax·host-only 쿠키를 발급하고 최대 8시간 후 만료합니다. 관리자 화면은 이 세션을 요구하고, API는 세션 또는 기존 소유자 도구용 Basic 인증을 검증합니다. 로그아웃은 앱 쿠키만 지우므로 Vercel 계정을 다시 요구하지 않습니다. 선택적 멘토 계정은 별도 비밀번호와 세션으로 같은 Demo를 평가하며, 전용 링크는 아이디만 자동 입력합니다. [멘토 접근과 실제 검증](docs/mission6/MENTOR_ACCESS.md). 회원 관리·역할·Supabase Auth는 추가하지 않았습니다.
+관리자는 loopback 로컬 또는 별도 보호된 Demo Preview에서만 동작합니다. 보호된 Preview는 비공개 진입 링크로 Vercel 접근 쿠키를 받은 뒤 `/admin/login`에서 아이디·비밀번호를 서버 검증합니다. 성공 시 HttpOnly·Secure·SameSite=Lax·host-only 쿠키를 발급하고 최대 8시간 후 만료합니다. 관리자 화면은 이 세션을 요구하고, API는 세션 또는 기존 소유자 도구용 Basic 인증을 검증합니다. 선택적 멘토 계정은 별도 비밀번호와 세션으로 같은 Demo를 평가합니다. 최신 요청에 따라 유효한 암호화 전용 링크에서만 아이디와 비밀번호를 모두 채우며, 로그인 버튼을 누르기 전에는 앱 세션을 발급하지 않습니다. [전용 링크와 최신 검증](docs/mission6/MENTOR_LINK_PREFILL.md). 회원 관리·역할·Supabase Auth는 추가하지 않았습니다.
 
 공개/Production/접근 제한 미확인 배포에서는 `CMS_ADMIN_MODE=disabled`로 둡니다. 사용자가 보내는 임의 헤더나 query parameter로 쓰기를 켤 수 없습니다.
 
@@ -155,7 +155,8 @@ npm run import:prayers -- --apply --publish
 - 공개 RLS 실연결 검사: draft 100개에서 공개 조회 0개, private provenance 조회 거부 확인.
 - 서버 키 연결 및 실제 Import dry-run/적용/재실행: PASS. 기존 100개 일치, 중복/충돌/실패 0개.
 - 실제 공개 조회·카테고리·페이지네이션·기도 체험: PASS, Desktop/Mobile에서 실제 CMS GET 사용.
-- 멘토 최초 구축: Lint·Typecheck·webpack Build 및 Unit 15 files / 260개 PASS. 후보·고정 주소에서 멘토/소유자 실제 로그인과 배포 전 소유자 세션 유지 PASS. [최초 검증](docs/mission6/MENTOR_ACCESS.md). 이후 비밀번호 변경·브라우저 저장 지원의 별도 검사와 배포는 [최신 기록](docs/mission6/MENTOR_PASSWORD_UPDATE.md)을 따릅니다.
+- 멘토 최초 구축: Lint·Typecheck·webpack Build 및 Unit 15 files / 260개 PASS. 후보·고정 주소에서 멘토/소유자 실제 로그인과 배포 전 소유자 세션 유지 PASS. [최초 검증](docs/mission6/MENTOR_ACCESS.md)과 [이전 비밀번호 변경 검사](docs/mission6/MENTOR_PASSWORD_UPDATE.md)를 최신 전용 링크 검증과 구분합니다.
+- 최신 멘토 전용 링크: Unit 17 files / 328개·Lint·TypeScript PASS. [암호화 링크로 두 필드 자동 입력 및 실제 배포 검증](docs/mission6/MENTOR_LINK_PREFILL.md).
 - 실제 관리자 HTTP·DB·Storage QA 73개: PASS. 별도 QA 행/이미지는 생성·검증 후 모두 정리했고 기존 100개를 보존했습니다.
 - 보호된 Preview 실제 API·Storage 76개와 실제 브라우저 폼·기도 체험 32개: PASS.
 - 공개 Production의 1440/393 실제 흐름 및 Tablet 768/1024 공개·관리자 반응형: PASS.
@@ -165,7 +166,7 @@ npm run import:prayers -- --apply --publish
 
 - 관리자 로그인 UI는 별도 `feat/mission6-admin-login-ui` 브랜치에서 2026-11-17 사용자 디자인 승인을 받았습니다.
   이후 사용자의 실제 로그인 요청에 따라 기존 아이디로 서버 세션을 연결했습니다.
-  [현재 비밀번호 변경·브라우저 저장 지원](docs/mission6/MENTOR_PASSWORD_UPDATE.md) · [구조와 향후 인증 계획](docs/mission6/ADMIN_LOGIN_AUTH_PLAN.md).
+  [현재 전용 링크의 두 필드 자동 입력](docs/mission6/MENTOR_LINK_PREFILL.md) · [구조와 향후 인증 계획](docs/mission6/ADMIN_LOGIN_AUTH_PLAN.md).
 - 세션은 stateless이므로 복사된 토큰의 개별 즉시 철회는 제공하지 않습니다. 해당 계정의 자격 교체는 해당 계정 세션을, 공통 서명키 교체는 두 계정 세션을 현재 배포에서 무효화합니다. 시도 제한의 앱 카운터는 인스턴스별이며 전역 강제 제한으로 간주하지 않습니다.
 - 실제 운영 CMS에는 아직 사용자별 관리자 인증·역할·감사 로그가 없습니다. 현재 쓰기는 비민감 Demo에 한정합니다.
 - 기존 사전예약 UI·어댑터는 보존하지만 미션 6 데모의 사전예약 저장은 disabled입니다. 기존 미션 5 Production은 변경하지 않았습니다.
