@@ -114,7 +114,7 @@
 .m6-status { display: inline-flex; align-items: center; justify-content: center; border-radius: 30px; padding: 4px 10px; font-size: 11px; font-weight: 600; line-height: 20px; color: #626674; background: #eeecf2; white-space: nowrap; }
 .m6-status--published { background: #e8f0e9; color: #336340; }
 .m6-status--published::before { content: ""; width: 4px; height: 4px; margin-right: 5px; background: #438251; border-radius: 50%; }
-.m6-dialog { width: min(500px, calc(100% - 40px)); border: 1px solid #d7d3de; border-radius: 20px; padding: 32px; background: #fdfcfe; color: #171c26; box-shadow: 0 24px 100px rgb(0 0 0 / 18%); }
+.m6-dialog { position: fixed; inset: 0; margin: auto; width: min(500px, calc(100% - 40px)); height: fit-content; max-height: calc(100dvh - 40px); overflow-y: auto; border: 1px solid #d7d3de; border-radius: 20px; padding: 32px; background: #fdfcfe; color: #171c26; box-shadow: 0 24px 100px rgb(0 0 0 / 18%); }
 .m6-dialog::backdrop { background: rgb(11 16 32 / 65%); backdrop-filter: blur(4px); }
 .m6-dialog h2 { font-size: 24px; margin-bottom: 14px; }
 .m6-dialog > p:not(.m6-eyebrow) { font-size: 14px; color: #646974; line-height: 26px; }
