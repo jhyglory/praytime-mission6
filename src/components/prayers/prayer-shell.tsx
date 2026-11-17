@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element -- Reuses the original local SVG wordmark. */
 import Link from "next/link";
+import { AdminLogout } from "@/components/admin-login/admin-logout";
 
 export function PrayerShell({ children, admin = false }: { children: React.ReactNode; admin?: boolean }) {
   return <div className={`m6-shell${admin ? " m6-shell--admin" : ""}`}>
@@ -13,6 +14,7 @@ export function PrayerShell({ children, admin = false }: { children: React.React
         <nav aria-label={admin ? "콘텐츠 관리 메뉴" : "기도 체험 메뉴"}>
           <Link href={admin ? "/admin/prayers" : "/prayers"}>{admin ? "기도문 관리" : "기도 가이드"}</Link>
           <Link href={admin ? "/prayers" : "/"} prefetch={admin ? undefined : false}>{admin ? "사용자 화면 보기" : "PrayTime 소개"}</Link>
+          {admin && <AdminLogout />}
         </nav>
       </div>
     </header>

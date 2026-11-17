@@ -1,14 +1,13 @@
-import { z } from "zod";
 import type { AdminLoginCredentials } from "./contracts";
 
 export type AdminLoginFieldErrors = Partial<Record<keyof AdminLoginCredentials, string>>;
-const emailSchema = z.email();
+export const ADMIN_LOGIN_USERNAME_MAX_LENGTH = 80;
 
 export function validateAdminLogin(credentials: AdminLoginCredentials): AdminLoginFieldErrors {
   const errors: AdminLoginFieldErrors = {};
-  const email = credentials.email.trim();
-  if (!email) errors.email = "이메일을 입력해 주세요.";
-  else if (email.length > 254 || !emailSchema.safeParse(email).success) errors.email = "이메일 주소 형식을 확인해 주세요.";
+  const username = credentials.username.trim();
+  if (!username) errors.username = "아이디를 입력해 주세요.";
+  else if (username.length > ADMIN_LOGIN_USERNAME_MAX_LENGTH) errors.username = "아이디는 80자 이하로 입력해 주세요.";
   if (!credentials.password) errors.password = "비밀번호를 입력해 주세요.";
   return errors;
 }

@@ -1,5 +1,19 @@
 # PrayTime · Codex Project Instructions
 
+## Working administrator login · current authority
+
+The user now explicitly requests working login and administrator entry. Implement
+the approved UI's real server-verified session using the existing chosen gateway
+credentials on `feat/mission6-admin-session-login`. Retain provider deployment
+protection, existing Basic compatibility, fail-closed admin API checks and public
+Production read-only behavior. Allow the branded login and its session endpoint
+only within an explicitly enabled local/protected Demo. No client-side session
+flags or secret storage. Verify real login, cookies, failure/logout and CMS access.
+This request authorizes the necessary protected Demo Preview rollout and private
+entry-link repair; it does not authorize removing Vercel protection, changing
+Mission 5/Production or adding membership/roles/Supabase accounts or schema.
+The UI-only hold below is superseded for this explicitly requested connection.
+
 ## Admin login UI review · 2026-11-17 · current authority
 
 The user approved the current design on 2026-11-17 at Checkpoint 3 (UI commit

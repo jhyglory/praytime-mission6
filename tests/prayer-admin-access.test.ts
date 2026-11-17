@@ -60,11 +60,11 @@ describe("CMS access gateway", () => {
     vi.stubEnv("CMS_ADMIN_ACCESS_KEY", "short");
     expect(guardAdminRequest(new Request(`${preview}/admin`, { headers: { authorization: basic("short") } }))?.status).toBe(403);
   });
-  it("uses a native Basic challenge without returning the key", async () => {
+  it("requires authentication without opening a native Basic popup and retains explicit API compatibility", async () => {
     enableDemo();
     const denied = guardAdminRequest(new Request(`${preview}/admin`));
     expect(denied?.status).toBe(401);
-    expect(denied?.headers.get("WWW-Authenticate")).toContain("Basic");
+    expect(denied?.headers.get("WWW-Authenticate")).toBeNull();
     expect(await denied!.text()).not.toContain(demoKey);
     expect(guardAdminRequest(new Request(`${preview}/admin`, { headers: { authorization: basic() } }))).toBeNull();
   });

@@ -1,5 +1,5 @@
 export interface AdminLoginCredentials {
-  email: string;
+  username: string;
   password: string;
 }
 
@@ -7,7 +7,7 @@ export interface AdminLoginCredentials {
 export type AdminLoginAuthenticator = (credentials: AdminLoginCredentials, signal: AbortSignal) => Promise<void>;
 
 export class AdminLoginAuthenticationError extends Error {
-  constructor(readonly code: "invalid-credentials" | "unavailable") {
+  constructor(readonly code: "invalid-credentials" | "unavailable" | "rate-limited") {
     super(code);
     this.name = "AdminLoginAuthenticationError";
   }

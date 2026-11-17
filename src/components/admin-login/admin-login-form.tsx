@@ -3,7 +3,7 @@
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { AdminLoginAuthenticationError, type AdminLoginAuthenticator, type AdminLoginCredentials } from "@/lib/admin-login/contracts";
-import { validateAdminLogin, type AdminLoginFieldErrors } from "@/lib/admin-login/validation";
+import { ADMIN_LOGIN_USERNAME_MAX_LENGTH, validateAdminLogin, type AdminLoginFieldErrors } from "@/lib/admin-login/validation";
 
 interface AdminLoginFormProps {
   authenticate?: AdminLoginAuthenticator;
@@ -13,12 +13,12 @@ interface AdminLoginFormProps {
 
 export function AdminLoginForm({ authenticate, onAuthenticated, disabled = false }: AdminLoginFormProps) {
   const id = useId();
-  const [values, setValues] = useState<AdminLoginCredentials>({ email: "", password: "" });
+  const [values, setValues] = useState<AdminLoginCredentials>({ username: "", password: "" });
   const [errors, setErrors] = useState<AdminLoginFieldErrors>({});
   const [showPassword, setShowPassword] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
-  const emailInput = useRef<HTMLInputElement>(null);
+  const usernameInput = useRef<HTMLInputElement>(null);
   const passwordInput = useRef<HTMLInputElement>(null);
   const request = useRef<AbortController | null>(null);
   const busy = useRef(false);
@@ -41,8 +41,8 @@ export function AdminLoginForm({ authenticate, onAuthenticated, disabled = false
     const problems = validateAdminLogin(values);
     setErrors(problems);
     setError("");
-    if (problems.email || problems.password) {
-      (problems.email ? emailInput : passwordInput).current?.focus();
+    if (problems.username || problems.password) {
+      (problems.username ? usernameInput : passwordInput).current?.focus();
       return;
     }
     // No fallback transport, Basic header, local session flag, or success simulation.
@@ -52,15 +52,17 @@ export function AdminLoginForm({ authenticate, onAuthenticated, disabled = false
     busy.current = true;
     setPending(true);
     try {
-      await authenticate({ email: values.email.trim(), password: values.password }, controller.signal);
+      await authenticate({ username: values.username.trim(), password: values.password }, controller.signal);
       if (!controller.signal.aborted) {
         setValues(previous => ({ ...previous, password: "" }));
         onAuthenticated?.();
       }
     } catch (reason) {
       if (!controller.signal.aborted) setError(reason instanceof AdminLoginAuthenticationError && reason.code === "invalid-credentials"
-        ? "이메일 또는 비밀번호를 확인해 주세요."
-        : "로그인하지 못했습니다. 잠시 후 다시 시도해 주세요.");
+        ? "아이디 또는 비밀번호를 확인해 주세요."
+        : reason instanceof AdminLoginAuthenticationError && reason.code === "rate-limited"
+          ? "로그인 요청이 많습니다. 잠시 후 다시 시도해 주세요."
+          : "로그인하지 못했습니다. 잠시 후 다시 시도해 주세요.");
     } finally {
       busy.current = false;
       if (!controller.signal.aborted) setPending(false);
@@ -69,9 +71,9 @@ export function AdminLoginForm({ authenticate, onAuthenticated, disabled = false
 
   return <form className="admin-login-form" aria-label="관리자 로그인" aria-busy={pending || undefined} noValidate onSubmit={submit}>
     <div className="admin-login-field">
-      <label className="admin-login-label" htmlFor={`${id}-email`}>이메일</label>
-      <input className="text-input admin-login-input" id={`${id}-email`} ref={emailInput} type="email" inputMode="email" autoComplete="username" autoCapitalize="none" spellCheck={false} maxLength={254} placeholder="name@example.com" value={values.email} disabled={locked} required aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? `${id}-email-error` : undefined} onChange={event => change("email", event.target.value)} onBlur={() => validateField("email")} />
-      {errors.email && <p className="admin-login-field-error" id={`${id}-email-error`} aria-live="polite">{errors.email}</p>}
+      <label className="admin-login-label" htmlFor={`${id}-username`}>아이디</label>
+      <input className="text-input admin-login-input" id={`${id}-username`} ref={usernameInput} type="text" inputMode="text" autoComplete="username" autoCapitalize="none" spellCheck={false} maxLength={ADMIN_LOGIN_USERNAME_MAX_LENGTH} placeholder="아이디를 입력하세요." value={values.username} disabled={locked} required aria-invalid={Boolean(errors.username)} aria-describedby={errors.username ? `${id}-username-error` : undefined} onChange={event => change("username", event.target.value)} onBlur={() => validateField("username")} />
+      {errors.username && <p className="admin-login-field-error" id={`${id}-username-error`} aria-live="polite">{errors.username}</p>}
     </div>
     <div className="admin-login-field">
       <label className="admin-login-label" htmlFor={`${id}-password`}>비밀번호</label>
@@ -85,6 +87,6 @@ export function AdminLoginForm({ authenticate, onAuthenticated, disabled = false
     </div>
     {error && <p className="admin-login-error" role="alert">{error}</p>}
     <Button type="submit" className="admin-login-submit" state={pending ? "submitting" : disabled || unavailable ? "disabled" : "default"} aria-describedby={unavailable ? `${id}-connection-note` : undefined}>{pending ? "로그인 중..." : "로그인"}</Button>
-    {unavailable && <p className="admin-login-connection-note" id={`${id}-connection-note`}>이메일 로그인은 준비 중입니다. 현재 화면에서는 계정 정보를 전송하지 않습니다.</p>}
+    {unavailable && <p className="admin-login-connection-note" id={`${id}-connection-note`}>로그인 연결을 준비 중입니다. 현재 화면에서는 계정 정보를 전송하지 않습니다.</p>}
   </form>;
 }

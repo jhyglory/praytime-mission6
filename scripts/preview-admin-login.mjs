@@ -5,7 +5,7 @@ const root = fileURLToPath(new URL("../", import.meta.url));
 const port = process.argv[2] || "3110";
 if (!/^\d+$/.test(port) || Number(port) < 1024 || Number(port) > 65535) throw new Error("Use a local port between 1024 and 65535.");
 const env = { ...process.env };
-for (const key of ["SUPABASE_URL", "SUPABASE_PUBLISHABLE_KEY", "SUPABASE_ANON_KEY", "PRAYER_SUPABASE_URL", "PRAYER_SUPABASE_PUBLISHABLE_KEY", "PRAYER_SUPABASE_SECRET_KEY", "CMS_DEPLOYMENT_PROTECTION", "CMS_ADMIN_ACCESS_KEY", "CMS_ADMIN_USERNAME", "CMS_ADMIN_PASSWORD_SHA256", "VERCEL", "VERCEL_ENV", "VERCEL_AUTOMATION_BYPASS_SECRET"]) env[key] = "";
+for (const key of ["SUPABASE_URL", "SUPABASE_PUBLISHABLE_KEY", "SUPABASE_ANON_KEY", "PRAYER_SUPABASE_URL", "PRAYER_SUPABASE_PUBLISHABLE_KEY", "PRAYER_SUPABASE_SECRET_KEY", "CMS_DEPLOYMENT_PROTECTION", "CMS_ADMIN_ACCESS_KEY", "CMS_ADMIN_USERNAME", "CMS_ADMIN_PASSWORD_SHA256", "CMS_ADMIN_SESSION_SECRET", "VERCEL", "VERCEL_ENV", "VERCEL_AUTOMATION_BYPASS_SECRET"]) env[key] = "";
 Object.assign(env, { BETA_SIGNUP_PERSISTENCE: "disabled", CMS_ADMIN_MODE: "local", CMS_DEMO_ENV: "true", SITE_URL: `http://127.0.0.1:${port}` });
 
 console.log(`Login UI review: http://127.0.0.1:${port}/admin/login (backend connections disabled)`);
