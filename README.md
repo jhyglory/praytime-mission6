@@ -11,7 +11,7 @@ PrayTime은 SNS를 열기 전 잠깐 멈추고 기도한 뒤, 지금 필요한 �
 - 보존 기준: `5d815a08365926566cc32c0a108634302e8e05b8` ([STEP 1](docs/mission6/STEP1_BASELINE.md))
 - 공개 Vercel: [PrayTime Mission 6](https://praytime-mission6.vercel.app/) · [기도 체험](https://praytime-mission6.vercel.app/prayers)
 - 관리자: [보호된 Preview](https://praytime-mission6-e2emx9f46-glorifier1.vercel.app/admin/prayers). 평가용 접근 정보는 비공개로 별도 전달합니다. [접근 구조와 평가 순서](docs/mission6/ACCESS.md)
-- `main`의 STEP 1 기준선은 유지하며 실제 미션 6 코드는 위 작업 브랜치에 있습니다. 배포 실행 코드 SHA는 `8b9c08dec498eee6741d30f865d19938486283eb`이며 이후 마감 커밋은 문서만 변경합니다.
+- `main`의 STEP 1 기준선은 유지하며 실제 미션 6 코드는 위 작업 브랜치에 있습니다. 공개 배포 실행 코드 SHA는 `8b9c08dec498eee6741d30f865d19938486283eb`입니다. 관리자 게이트 변경과 Preview 검증 이력은 QA 문서를 따릅니다.
 - Mission 5 저장소·PR #1·Production·신청 DB·Figma·native 앱 파일은 수정하지 않습니다.
 
 ## 구현 범위
@@ -95,7 +95,9 @@ docs/mission6/              설계·원본 감사·QA·접근 설정
 | CMS_ADMIN_MODE | disabled / local / protected-demo |
 | CMS_DEMO_ENV | 비민감 Demo 전용 확인; 관리자 모드에는 true 필요 |
 | CMS_DEPLOYMENT_PROTECTION | 접근 제한을 실제 확인한 Preview에서만 verified |
-| CMS_ADMIN_ACCESS_KEY | 보호된 Demo의 비공개 공유 게이트 키; 최소 32자 |
+| CMS_ADMIN_USERNAME | 보호된 Demo의 비공개 HTTP 게이트 사용자 이름 |
+| CMS_ADMIN_PASSWORD_SHA256 | 게이트 비밀번호의 SHA-256 hex; 서버 전용 |
+| CMS_ADMIN_ACCESS_KEY | 위 두 설정이 모두 비어 있을 때만 사용하는 기존 32자 이상 공유 키 |
 | BETA_SIGNUP_PERSISTENCE | 로컬·QA에서는 disabled 유지 |
 | SUPABASE_URL / SUPABASE_PUBLISHABLE_KEY / SUPABASE_ANON_KEY | 기존 신청 어댑터 전용; CMS와 혼용 금지 |
 | SITE_URL | 배포 시 본인의 사이트 origin |

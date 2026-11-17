@@ -31,7 +31,7 @@ disabled이며, 미션 5 원본 Production·신청 저장소는 변경하지 않
 Vercel 계정 토큰은 이 안내에도 들어 있지 않다.
 
 비공개 평가 링크는 브라우저에 프로젝트 접근 쿠키를 설정한 뒤 앱 HTTP 게이트로 이동한다.
-게이트의 사용자 이름은 `demo`이며, 키는 비공개 안내를 따른다. 평가자는 앱 회원가입 없이
+게이트의 사용자 이름과 비밀번호는 비공개 안내를 따른다. 평가자는 앱 회원가입 없이
 CRUD를 확인할 수 있다. 브라우저가 인증을 기억하면 새 비공개 창에서 다시 확인한다.
 
 ## 권장 평가 순서
@@ -55,6 +55,9 @@ Deployment Protection/Preview 환경 설정에서 처리하고 새 Preview를 �
 - Preview는 Standard Deployment Protection을 실제 확인한 뒤에만 보호된 Demo 모드를 사용한다.
 - Production의 관리자 모드는 disabled다. Header/query만으로 켤 수 없다.
 - Preview 서버용 키·접근 키는 encrypted 환경 변수이며 브라우저에 전달하지 않는다.
+- 사용자 지정 게이트는 `CMS_ADMIN_USERNAME`과 `CMS_ADMIN_PASSWORD_SHA256`으로 설정한다.
+  비밀번호 원문이나 digest는 저장소·브라우저에 포함하지 않는다. 사용자 지정 값이
+  설정되면 기존 `demo` 공유 키는 허용하지 않으며, 불완전한 설정은 접근을 차단한다.
 - 실제 HTTP·Storage 검증과 정리 결과는 [QA](QA.md)를 따른다.
 - 실행 코드 SHA: `8b9c08dec498eee6741d30f865d19938486283eb`.
 - Preview 실제 API/Storage 76개·브라우저 32개, 공개 Desktop/Mobile 및 Tablet 6개 검증을 완료했다.

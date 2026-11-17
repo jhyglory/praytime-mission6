@@ -132,7 +132,8 @@ QA 행 잔여 0, 파일 잔여 0, SDK fallback 정리 0이었다. 전용 3108 �
 Production deployment: `dpl_3h6E7G52uUnL1vmsq2eMCBF7RkB2`.
 평가용 Preview deployment: `dpl_9qWUrpxSFibBXNxKUKwvadqzTnyA`.
 공개 구현 코드의 전체 SHA: `8b9c08dec498eee6741d30f865d19938486283eb`.
-이후 문서 마감 커밋은 실행 소스/에셋/lockfile을 변경하지 않는다.
+최초 문서 마감 커밋 `1ae5203`은 실행 소스/에셋/lockfile을 변경하지 않았다.
+이후 사용자 지정 관리자 게이트 변경은 아래 별도 검증 기록을 따른다.
 
 - Preview 초기 disabled 배포에서 무인증 302, provider 접근 후 ADMIN_DISABLED 403,
   공개 실제 count 100을 확인한 뒤에만 보호된 Demo 모드를 활성화했다.

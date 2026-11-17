@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { createHash } from "node:crypto";
 import { getAdminAccessState, guardAdminRequest } from "../src/lib/prayers/admin-access";
 
 const local = "http://127.0.0.1:3106";
@@ -15,7 +16,7 @@ function enableDemo() {
 const basic = (password = demoKey) => `Basic ${Buffer.from(`demo:${password}`).toString("base64")}`;
 
 beforeEach(() => {
-  for (const name of ["CMS_ADMIN_MODE", "CMS_ADMIN_ACCESS_KEY", "CMS_DEMO_ENV", "CMS_DEPLOYMENT_PROTECTION", "VERCEL", "VERCEL_ENV"]) vi.stubEnv(name, "");
+  for (const name of ["CMS_ADMIN_MODE", "CMS_ADMIN_ACCESS_KEY", "CMS_ADMIN_USERNAME", "CMS_ADMIN_PASSWORD_SHA256", "CMS_DEMO_ENV", "CMS_DEPLOYMENT_PROTECTION", "VERCEL", "VERCEL_ENV"]) vi.stubEnv(name, "");
   vi.stubEnv("CMS_DEMO_ENV", "true");
 });
 afterEach(() => vi.unstubAllEnvs());
@@ -66,6 +67,27 @@ describe("CMS access gateway", () => {
     expect(denied?.headers.get("WWW-Authenticate")).toContain("Basic");
     expect(await denied!.text()).not.toContain(demoKey);
     expect(guardAdminRequest(new Request(`${preview}/admin`, { headers: { authorization: basic() } }))).toBeNull();
+  });
+  it("accepts configured credentials and revokes the legacy gateway credentials", () => {
+    enableDemo();
+    const password = "test-only-chosen-password";
+    vi.stubEnv("CMS_ADMIN_USERNAME", "test-admin");
+    vi.stubEnv("CMS_ADMIN_PASSWORD_SHA256", createHash("sha256").update(password).digest("hex"));
+    const request = (username: string, secret: string) => new Request(`${preview}/admin`, {
+      headers: { authorization: `Basic ${Buffer.from(`${username}:${secret}`).toString("base64")}` },
+    });
+    expect(guardAdminRequest(request("test-admin", password))).toBeNull();
+    expect(guardAdminRequest(request("another-admin", password))?.status).toBe(401);
+    expect(guardAdminRequest(request("test-admin", "wrong"))?.status).toBe(401);
+    expect(guardAdminRequest(new Request(`${preview}/admin`, { headers: { authorization: basic() } }))?.status).toBe(401);
+  });
+  it.each([
+    ["test-admin", ""], ["", "a".repeat(64)], ["test-admin", "invalid-hash"], ["bad:username", "a".repeat(64)],
+  ])("fails closed for incomplete or invalid configured credentials %s", (username, passwordHash) => {
+    enableDemo();
+    vi.stubEnv("CMS_ADMIN_USERNAME", username);
+    vi.stubEnv("CMS_ADMIN_PASSWORD_SHA256", passwordHash);
+    expect(guardAdminRequest(new Request(`${preview}/admin`, { headers: { authorization: basic() } }))?.status).toBe(403);
   });
   it.each(["wrong", "Bearer delegated", "Basic !!!", `Basic ${Buffer.from("someone:wrong").toString("base64")}`])("rejects invalid gateway credentials: %s", header => {
     enableDemo();
