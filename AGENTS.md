@@ -1,5 +1,13 @@
 # PrayTime · Codex Project Instructions
 
+## Mentor password update · 2026-11-18 · current authority
+
+The user requests a new mentor password and convenient repeat login. Update only
+the mentor Preview credential and private handoff, then redeploy and verify.
+Use native password-manager field hints for saved-password autofill; keep the
+password out of page defaults, URLs, browser storage, Git and logs. Preserve the
+owner credentials/sessions, provider protection and public Production boundaries.
+
 ## Mentor evaluation access · 2026-11-18 · current authority
 
 The user authorizes a separate mentor Demo account, username prefill from its
