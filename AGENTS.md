@@ -1,5 +1,18 @@
 # PrayTime · Codex Project Instructions
 
+## Explicit mentor credential prefill · 2026-11-18 · current authority
+
+The user explicitly rejects browser-managed autofill and requests both mentor
+fields to be prefilled when their private link opens. This supersedes the older
+username-only/page-password prohibitions narrowly for an authorized mentor link.
+Work on `feat/mission6-mentor-link-prefill` from clean `9a867b5`. Use an encrypted,
+audience-bound expiring capability and short-lived HttpOnly prefill cookie inside
+the protected Demo. Plaintext passwords stay out of URLs, static client bundles,
+Git and logs. Authorized form props may contain the mentor password as requested.
+Normal login pages remain empty, and prefill never issues an auth session or
+submits the form. Preserve owner sessions, provider protection and API guards.
+Deploy to the existing protected admin alias and deliver the updated private link.
+
 ## Mentor password update · 2026-11-18 · current authority
 
 The user requests a new mentor password and convenient repeat login. Update only

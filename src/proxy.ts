@@ -15,9 +15,12 @@ function adminRedirect(request: NextRequest, pathname: "/admin/login" | "/admin/
 export function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const state = getAdminAccessState(request.url);
-  if (state.enabled && path === "/admin/login" && ["GET", "HEAD"].includes(request.method)) {
+  if (state.enabled && ["/admin/login", "/admin/login/mentor"].includes(path) && ["GET", "HEAD"].includes(request.method)) {
     if (hasAdminSession(request)) return adminRedirect(request, "/admin/prayers");
-    return NextResponse.next();
+    const response = NextResponse.next();
+    response.headers.set("Cache-Control", "private, no-store");
+    response.headers.set("Referrer-Policy", "no-referrer");
+    return response;
   }
   // This exact endpoint verifies mode, origin, body limits and credentials itself.
   if (state.enabled && path === "/api/admin/session" && ["GET", "POST", "DELETE"].includes(request.method)) return NextResponse.next();

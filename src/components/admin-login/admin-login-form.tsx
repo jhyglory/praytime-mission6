@@ -7,14 +7,15 @@ import { ADMIN_LOGIN_USERNAME_MAX_LENGTH, validateAdminLogin, type AdminLoginFie
 
 interface AdminLoginFormProps {
   initialUsername?: string;
+  initialPassword?: string;
   authenticate?: AdminLoginAuthenticator;
   onAuthenticated?: () => void;
   disabled?: boolean;
 }
 
-export function AdminLoginForm({ initialUsername = "", authenticate, onAuthenticated, disabled = false }: AdminLoginFormProps) {
+export function AdminLoginForm({ initialUsername = "", initialPassword = "", authenticate, onAuthenticated, disabled = false }: AdminLoginFormProps) {
   const id = useId();
-  const [values, setValues] = useState<AdminLoginCredentials>(() => ({ username: initialUsername, password: "" }));
+  const [values, setValues] = useState<AdminLoginCredentials>(() => ({ username: initialUsername, password: initialPassword }));
   const [errors, setErrors] = useState<AdminLoginFieldErrors>({});
   const [showPassword, setShowPassword] = useState(false);
   const [pending, setPending] = useState(false);

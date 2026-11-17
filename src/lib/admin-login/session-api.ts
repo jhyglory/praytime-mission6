@@ -4,6 +4,7 @@ import { getAdminAccessState, guardAdminMutationRequest } from "../prayers/admin
 import { authenticateAdminCredentials } from "../prayers/admin-credentials";
 import { adminSessionConfigured, createAdminSession, hasAdminSession, adminSessionCookie } from "../prayers/admin-session";
 import { prayerJSON } from "../prayers/errors";
+import { mentorPrefillCookie } from "./mentor-prefill";
 
 const MAX_LOGIN_BODY_BYTES = 4096;
 
@@ -76,7 +77,9 @@ export function createAdminSessionApi({ now = Date.now, limiter = createLoginLim
       const token = createAdminSession(request, now(), principal);
       if (!token) return error(503, "LOGIN_NOT_CONFIGURED", "관리자 로그인 연결 설정을 확인해 주세요.");
       limiter.reset(key);
-      return prayerJSON({ authenticated: true }, 200, { "Set-Cookie": adminSessionCookie(token) });
+      const headers = new Headers({ "Set-Cookie": adminSessionCookie(token) });
+      headers.append("Set-Cookie", mentorPrefillCookie(null));
+      return prayerJSON({ authenticated: true }, 200, headers);
     },
     async GET(request: Request): Promise<Response> {
       const denied = enabled(request);
@@ -86,7 +89,9 @@ export function createAdminSessionApi({ now = Date.now, limiter = createLoginLim
     async DELETE(request: Request): Promise<Response> {
       const denied = enabled(request) ?? guardAdminMutationRequest(request, MAX_LOGIN_BODY_BYTES);
       if (denied) return denied;
-      return prayerJSON({ authenticated: false }, 200, { "Set-Cookie": adminSessionCookie(null) });
+      const headers = new Headers({ "Set-Cookie": adminSessionCookie(null) });
+      headers.append("Set-Cookie", mentorPrefillCookie(null));
+      return prayerJSON({ authenticated: false }, 200, headers);
     },
   };
 }
