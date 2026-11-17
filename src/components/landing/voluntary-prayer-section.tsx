@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element -- Exact responsive Figma companion layers. */
+import Link from "next/link";
 import { PrayerSteps } from "@/components/landing/prayer-steps";
 
 function PrayerCompanion() {
@@ -6,5 +7,5 @@ function PrayerCompanion() {
 }
 
 export function VoluntaryPrayerSection() {
-  return <section className="prayer-section" id="prayer-choice" aria-labelledby="prayer-heading" data-figma-node="1209:657 / 1209:1191"><div className="container prayer-editorial"><div className="prayer-heading"><div className="content-stack"><p className="eyebrow">MAKE ROOM FOR PRAYER</p><h2 id="prayer-heading" tabIndex={-1}>멈추고, 기도하고,<br />다시 선택합니다.</h2></div><p className="prayer-statement">무심코 사용하던 순간에<br />기도하고 생각할 시간을 더합니다.</p></div><PrayerSteps /><div className="voluntary-prayer"><PrayerCompanion /><div><h3>SNS를 열지 않아도,<span className="mobile-break"><br /></span><span className="desktop-space"> </span>원할 때 기도할 수 있습니다.</h3><p>기도하고 싶을 때 PrayTime을 직접 열어보세요.<br className="desktop-source" /> 나의 기도나 기도 가이드로 시작할 수 있습니다.</p></div></div></div></section>;
+  return <section className="prayer-section" id="prayer-choice" aria-labelledby="prayer-heading" data-figma-node="1209:657 / 1209:1191"><div className="container prayer-editorial"><div className="prayer-heading"><div className="content-stack"><p className="eyebrow">MAKE ROOM FOR PRAYER</p><h2 id="prayer-heading" tabIndex={-1}>멈추고, 기도하고,<br />다시 선택합니다.</h2></div><p className="prayer-statement">무심코 사용하던 순간에<br />기도하고 생각할 시간을 더합니다.</p></div><PrayerSteps /><div className="voluntary-prayer"><PrayerCompanion /><div><h3>SNS를 열지 않아도,<span className="mobile-break"><br /></span><span className="desktop-space"> </span>원할 때 기도할 수 있습니다.</h3><p>기도하고 싶을 때 PrayTime을 직접 열어보세요.<br className="desktop-source" /> 나의 기도나 <Link href="/prayers" aria-label="기도 가이드 체험하기" style={{ textDecoration: "underline", textUnderlineOffset: "4px" }}>기도 가이드</Link>로 시작할 수 있습니다.</p></div></div></div></section>;
 }

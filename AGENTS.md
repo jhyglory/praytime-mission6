@@ -1,5 +1,30 @@
 # PrayTime · Codex Project Instructions
 
+## Mission 6 CMS implementation · 2026-11-17 · current authority
+
+The latest user request authorizes the complete prayer-content CMS and public prayer
+experience on `feat/mission6-prayer-cms`. This supersedes the STEP 1-only hold below.
+Reuse the existing Mission 6 repository, Next 16 / React 19 stack, native Korean
+guide JSON, and the separate PrayTime CMS Supabase project. Preserve native app
+files, Mission 5 repository/PR/Production, signup backend/data, Figma and existing
+landing design. Only add the requested prayer-experience CTA to the landing.
+
+- Keep actual JSON fields/IDs/text and existing CMS rows intact; back up before
+  additive migrations. No table recreation or blind overwrite of edited CMS rows.
+- Use the existing `public.prayers` and private `prayer-covers` bucket in the CMS
+  project. RLS stays enabled; public reads expose published rows only. Never use
+  the Mission 5 signup project for CMS operations.
+- Server keys stay in ignored environment files and server code only. No secrets
+  in browser code, logs, Git or README. No fake data fallback for missing services.
+- Admin CRUD is allowed only on loopback local development or explicitly protected
+  demo Preview deployments. Public/unverified deployments fail closed for admin
+  access and writes. No user accounts, signup/login system or per-user roles.
+- Verify CRUD, Storage, validation, pagination, timer and landing regressions.
+  Report actual tests and unavailable checks separately. Preview first; do not
+  alter existing Production, DNS or merge branches. Push only to Mission 6.
+- The previous instructions remain historical evidence where they conflict with
+  this current task. The current user's instructions take precedence.
+
 ## Mission 6 scope · 2026-11-09 · current authority
 
 This independent repository is `jhyglory/praytime-mission6`. The current user request

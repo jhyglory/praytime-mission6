@@ -1,165 +1,163 @@
-# PrayTime · Mission 5
+# PrayTime · Mission 6
 
-PrayTime은 무심코 SNS·숏폼 앱을 여는 순간 잠깐 멈추고 기도한 뒤, 지금 필요한 사용인지 다시 선택하도록 돕는 기독교 기반 디지털 웰니스 서비스입니다. 이 저장소는 제품 소개와 베타 신청 Landing입니다.
+PrayTime은 SNS를 열기 전 잠깐 멈추고 기도한 뒤, 지금 필요한 사용인지 다시 선택하도록 돕는 기독교 기반 디지털 웰니스 서비스입니다. 이번 미션은 기존 랜딩을 보존하면서 **기도 가이드 CMS → Supabase → 사용자 웹 기도 체험**을 연결합니다.
 
-핵심 흐름은 **PAUSE → PRAY → CHOOSE → USE → RETURN**입니다. 기도 완료가 SNS 자동 해제를 뜻하지 않습니다. 돌아가거나, 필요하면 **5 / 10 / 15분**을 정해 사용합니다. 시간이 끝나면 다시 제한되고 추가 사용에는 Prayer / Choice가 필요합니다.
+웹 체험은 실제 iOS·Android의 SNS 차단·자동 재차단 기능이 아닙니다. 자유기도 원문·개인 기도 제목·감정·사용자별 기도 기록은 서버에 저장하지 않습니다.
 
-## 현재 기준과 작업 상태
+## 저장소와 배포
 
-현재 로컬에는 사용자 A안의8개 구간·FAQ7개·폼 문구가 적용되어 있습니다. 기존 디자인·에셋·모션·API는 유지하며, 모바일의 짧아진 문구가 CTA·빛·폰 위치를 당기지 않도록 기존 텍스트 슬롯만 보존했습니다. **사용자가 A안을 확인하고 커밋·푸시·배포를 승인했습니다.** 기존feature/PR #1/Vercel로 반영하며, 새 배포 확인 결과는 검수 문서와 PR #1을 따릅니다. [A안 적용 범위·검증·미리보기](docs/COPY_A_LOCAL.md).
+- GitHub: [jhyglory/praytime-mission6](https://github.com/jhyglory/praytime-mission6)
+- 작업 브랜치: `feat/mission6-prayer-cms`
+- 보존 기준: `5d815a08365926566cc32c0a108634302e8e05b8` ([STEP 1](docs/mission6/STEP1_BASELINE.md))
+- Mission 6 Vercel URL: **보호된 Preview 배포 준비 중**. 공식 CLI의 인증 갱신과 별도 Mission 6 프로젝트/Node 24 설정을 완료했습니다. 과거 Mission 5 URL을 이번 배포 결과로 표시하지 않습니다.
+- Mission 5 저장소·PR #1·Production·신청 DB·Figma·native 앱 파일은 수정하지 않습니다.
 
-인트로는 위쪽 “그래서” 영역의 밝은 배경과 아래쪽 로고 영역의 네이비를 고정된 검은 그라데이션으로 연결합니다. “그래서”가 사라지거나 로고가 나타난 뒤에도 위쪽은 어두워지지 않습니다. 기존4.6초 타임라인·문구·빛·실제 로고 위치와 정적/reduced 구성을 보존합니다. [배경 보정·검증](docs/INTRO_BACKGROUND_HANDOFF.md).
+## 구현 범위
 
-WHY NOW의 “스마트폰 사용을 줄이려는 마음이 있어도…” 설명은 두 과의존 위험군 카드 아래, 출처 위에 있습니다. 하단 그라데이션은 제거해 section 전체를 Soft Paper 밝은 배경으로 유지하며 출처는 읽기 쉬운 회색입니다. 문구·줄바꿈·폰트·통계 모션·여백은 유지합니다. [현재 보정·검증](docs/SLOW_FALL_LIGHT_BACKGROUND.md).
+- 관리자: 목록·상세·등록·수정·삭제 확인, 카테고리·게시 상태, 대표 이미지, 페이지네이션.
+- 사용자: 공개 목록·카테고리 선택·상세·기도 시작/일시정지/계속/마치기·완료 화면.
+- 서버: Next.js Route Handlers, Zod 검증, 서버 전용 Supabase 어댑터, 요청 크기·이미지 형식 검증, 중복 요청·동시 수정 방지.
+- 운영 보호: 공개 읽기는 published만, 관리자 접근 기본 비활성화, 별도 Demo에서만 쓰기.
+- 기존 랜딩의 색·폰트·레이아웃·모션·카피·신청 계약을 유지합니다. PRAYER의 기존 “기도 가이드” 문구만 체험 링크로 연결했습니다.
 
-최신 질문 문구는 “무심코 열게 된 SNS,”가 먼저 나타나고, 첫 등장 시작에서1.2초 뒤 나머지 문장이 나타납니다. 뜸을 들이는 느낌을 위해 두 문장의 시작 간격은 기존 행간의3배인 Desktop240px/Mobile144px로 넓혔습니다. 각800ms fade와 두 번째 문장 내부의 모바일 줄바꿈·행간은 유지합니다. [순차 등장·검증](docs/QUESTION_STAGGER.md).
+## 사용 기술
 
-직전 전체 모션 보정에서는 시작·끝 곡선과 연결을 정리했습니다. 기존 대기·전체 재생시간·디자인은 유지하고, FAQ 본문과 시간 선택의 전환·화면 폭 변경 시 이어 재생·누락된 SNS 입자 상승을 보정했습니다. 해당 소스의 lint/typecheck·unit60·browser66·Webpack build가 모두 통과했습니다. [이전 모션 보정·실측](docs/MOTION_POLISH.md).
-
-기도 단계의01 PAUSE→02 PRAY→03 CHOOSE는 섹션 진입 시 빛이 선을 그으며 순서대로 나타납니다. 각 단계가 추가될 때 앞서 나타난 빛과 텍스트는 그대로 남아, 마지막에는 세 개 모두 유지됩니다. 기존 위치·크기·문구는 유지하며 화면 밖/비활성 탭에서는 정지하고 reduced-motion/no-JS에서는 원래 정적 구성을 표시합니다. [구현·검증](docs/PRAYER_STEPS_MOTION.md).
-
-누적 interaction은 질문의 스크롤 fade·영문 eyebrow 삭제, 통계500ms 대기, “그래서” 정지 대기600ms, SNS 카드 후1700ms에 검은 배경/문구 등장, THE GAP의1200ms 대기+약5784.62ms 빛 모션입니다. GAP 초반의 느린 낙하에400ms를 추가하고 마지막 자석처럼 끌리는 구간은 원래 속도로 유지합니다. 기존 feature/PR/Vercel을 통한 배포 흐름을 사용합니다. 이전 “로컬만/아직 배포 안 함” 기록은 과거 보정 단계의 이력입니다. [이전 누적 검증](docs/FINAL_INTERACTION_RELEASE.md).
-
-전체12구간 구현을 기준으로, 최신 작업은 **종이비행기 공유 아이콘·SNS 카드0.7배 속도와 열 교차·단계별 빛 중심·흰색→네이비 인트로** 네 항목입니다. 우선순위는 **최신 사용자 명세 → 최종 Figma Desktop1209:514 / Mobile1209:1051 및 복원된 인트로 → 기존 구현·문서**입니다. 네 항목 밖의 문구·레이아웃·기능은 유지합니다.
-
-- [최종 Desktop · 1440](https://www.figma.com/design/J8iLsfruyMwVCakXsSJPq4/?node-id=1209-514)
-- [최종 Mobile · 393](https://www.figma.com/design/J8iLsfruyMwVCakXsSJPq4/?node-id=1209-1051)
-- [Desktop intro entrance](https://www.figma.com/design/J8iLsfruyMwVCakXsSJPq4/?node-id=1265-8215) · [Mobile intro entrance](https://www.figma.com/design/J8iLsfruyMwVCakXsSJPq4/?node-id=1265-11339)
-- 구간별 변경·보존 내역과 검증 상태: [WHOLE_PAGE_FINAL.md](docs/WHOLE_PAGE_FINAL.md)
-- 최신 네 항목의 Figma 레이어·타이밍·검증 상태: [FOUR_INTERACTIONS_PATCH.md](docs/FOUR_INTERACTIONS_PATCH.md)
-
-이전 전체 페이지 검증에서 **lint / typecheck / unit47 / browser40 / Webpack production build**가 통과했고1440/393/360px 통계 reload와 SNS 재생을 확인했습니다. 이는 과거 기준선입니다. 현재 네 항목 패치의 검사·실제 두 주기 재생·배포 검증은 [별도 기록](docs/FOUR_INTERACTIONS_PATCH.md)을 따르며, 아직 수행하지 않은 항목을 과거 PASS로 대신하지 않습니다.
-
-| 항목 | 현재 연결 |
-| --- | --- |
-| Repository | [jhyglory/praytime-mission5](https://github.com/jhyglory/praytime-mission5), public |
-| 작업 branch | `feature/mission-5-landing` |
-| 기존 PR | [[정하영]-미션5 #1](https://github.com/jhyglory/praytime-mission5/pull/1) |
-| 기존 Production | [praytime-mission5.vercel.app](https://praytime-mission5.vercel.app) |
-
-사용자는 검증 후 기존 feature branch / PR #1 / Vercel 프로젝트를 통한 commit/push/deploy를 승인했습니다. main 변경·merge·새 PR·새 DB·DNS 전환은 하지 않습니다.
-
-## 빛의 틈 모션
-
-최신 빛의 표현은 밝은 아이보리 중심과 은은한 샴페인 골드의 가장자리·주변·바닥 광채입니다. 발광면 내부의 작은 밝기 차이와 실제 화면 약0.5–0.73px의 가장자리 softness로 균일한 흰 막대 인상을 완화했습니다. 기존 직사각형 크기·진입 대기는 유지합니다. [빛 보정·검증](docs/GAP_CHAMPAGNE_LIGHT.md).
-
-짧은 빛의 느린 초반은 약346→746ms로 늘렸고 마지막 약346ms의 자석처럼 끌리는 동작은 원래 속도로 유지합니다. 부드러운 clock 연결로 멈춤·역행·속도 꺾임 없이 이어지고, 접촉/상승/열림 이후 구간은 시간만400ms 뒤로 이동합니다. [현재 보정·실측](docs/SLOW_FALL_LIGHT_BACKGROUND.md) · [이전 낙하 곡선](docs/GAP_MAGNETIC_FALL.md).
-
-THE GAP은 기존1.3배 source choreography에 초반400ms를 더해7000÷1.3+400=약5784.62ms로 재생하고1200ms 진입 대기를 사용합니다. 전체 약6.98초 뒤 최종 발광면을 유지합니다. 이전4521.43ms 기본 preset은 과거 비교용으로만 남깁니다. `/dev/gap-light`의 재생/탐색 제어는 개발 모드에서만 사용할 수 있습니다. [로컬 보정 이력](docs/GAP_LIGHT_SEVEN_SECOND_STUDY.md).
-
-THE GAP의 중앙 빛은 재사용 가능한 `GapLightMotion` SVG 컴포넌트입니다. 짧은 빛의 하강 → 접촉·바닥 확산·머무름 → 상승과 연결된 틈 → 테두리 없는 아이보리 발광면 순서입니다. 진입 후1.2초 대기하고약5.78초 동안 한 번 재생하며 화면 밖/비활성 탭에서는 일시정지하고, reduced-motion과 JavaScript 비활성화에서는 최종 모습을 표시합니다. 문구·CTA·섹션 크기는 유지합니다. 개발 전용 미리보기는 `npm run preview:gap-light` 후 `/dev/gap-light`에서 실행합니다. [이전 연결·검증 기록](docs/GAP_LIGHT_LANDING_RELEASE.md).
-
-## 전체 Landing과 현재 동작
-
-질문은 일반 모션 환경에서 두 문장을 처음에는 숨기고, 사용자가 스크롤한 뒤 제목이15% 보이면 “무심코 열게 된 SNS,”를800ms opacity로 나타냅니다. 첫 문장의 시작에서1200ms 뒤 “진짜 꼭 필요해서 연 적이 얼마나 있나요?”가800ms fade로 이어집니다. 총 약2초이며 한 번 표시된 뒤 다시 숨기지 않습니다. 두 문장 사이 간격만3배로 넓혀 질문 섹션은 Desktop576px/Mobile416px가 되었으며, 다른 섹션 크기와 두 번째 문장 내부 행간은 유지합니다. reduced-motion/no-JS는 두 문장을 즉시 읽을 수 있습니다.
-
-SNS 텍스트는 카드가 먼저 움직인 뒤1700ms 후 중앙 선언·보조 문구와 검은 reading field를 함께400ms fade-in합니다. 기존 위치/문구/카드 속도·방향은 유지하고 reduced-motion/no-JS에서는 바로 읽을 수 있습니다. [보정 이력](docs/SNS_COPY_REVEAL.md). 이번 릴리스에 포함합니다.
-
-Header/Nav → Hero → ONE QUESTION → WHY NOW → 독립 clean intro → SNS declaration → THE GAP → TIME SELECT → PRAYER BEFORE CHOICE → FAQ → BETA SIGNUP → Footer 순서입니다. Header는 Hero 위 overlay이며, clean intro와 SNS scene은 서로 다른 스크롤 구간입니다.
-
-- 상단 Header의 신청 CTA는 Desktop·Mobile 모두 제거했습니다. Hero CTA와 form submit의 **“무료로 신청하기”**는 유지합니다. 로고·기존 navigation 위치·원본 artwork는 보존합니다.
-- Hero/Question은 사용자가 제공한 고화질 PNG 원본 비율·기존 glass 위치를 유지합니다. THE GAP은 이전 PNG의 빛 상단·바닥 위치를 보존하면서 위의 승인된 SVG 모션으로 교체했습니다. [과거 원본 해시](docs/evidence/high-resolution-assets/originals.json).
-- Hero 유리 이미지는 hover·마우스 이동에도 고정됩니다. 이전2.5px pointer parallax는 제거했으며 원본 이미지·crop·CTA hover/focus는 유지합니다.
-- ONE QUESTION은 Hero와 같은 원본 artwork의 연속 crop을 사용합니다. 최종 Figma의 Desktop56/80, Mobile32/48 제목을 적용합니다.
-- WHY NOW는 각 카드가 실제 **40%** 보인 뒤 **500ms 대기 후** 독립 시작합니다. 대기 중 화면 밖으로 나가거나 탭이 비활성화되면 취소하고 재진입 때 다시 기다립니다. 이미 시작한 애니메이션은 추가 대기 없이 이어집니다. 숫자와 막대가 같은 **1400ms** 부드러운 시작·끝 진행률로 `0.0% → 34.3% / 25.3%`에 도달합니다. 두 막대 모두 **Signal Red #FF4438**이며 회색 track은 표시하지 않습니다. 사용자 요청에 따른 장식용 최종 길이는80% /70%이고, 실제 통계 숫자34.3% /25.3%는 그대로 유지합니다.
-- 통계는 **카드마다 페이지 로드당 한 번** 실행합니다. 새로고침·페이지 재진입에서는 다시 실행하며, 완료 여부를 `sessionStorage`나 `localStorage`에 저장하지 않습니다. reduced-motion/no-JS는 읽을 수 있는 최종값을 표시합니다.
-- clean intro는 **흰색 영역의 검은 “그래서” 전체 단어 → 얇은 빛과 배경 전환 → 네이비의 실제 빨간 Pause Mark·워드마크 + “은”** 순서입니다. 최신 요청으로 단어와 흰 배경의 공통 정지 대기를0.6초로 줄였으며 전체 타임라인은4.6초입니다. 원본의 등장·fade 속도는 유지하고 구간 진입 시 한 번 실행하며 화면 밖·비활성 탭에서 정지합니다. 점 세 개와 “행동하기 전에, 잠깐의 틈을 만듭니다.” 문구는 없으며, 인트로에 SNS 장식은 넣지 않습니다. reduced-motion/no-JS에서도 읽을 수 있는 정적 상태를 제공합니다.
-- SNS scene은 최종 Figma의 Desktop760/Mobile680px 구간과 고정 선언·보조 문구를 유지합니다. 카드 속도는 직전15초 모션의 **0.7배**이며 같은 이동 거리의 새 주기는 **15000÷0.7=21428.571428571428ms(약21.43초)**입니다. Desktop6열은 **↑↓↑↓↑↓**, Mobile3열은 **↑↓↑**로 열 전체가 교차 이동합니다. 원본 사진80개를 각 viewport의 base cycle에 한 번씩 배치하고 독립 phase·동일 duplicate tile로 양방향 반복을 연결합니다. 하트16개·종이비행기4개는 카드 방향과 무관하게 기존12초 타이밍으로 계속 상승합니다.
-- SNS 카드 안과 주변의 공유 glyph는 선으로 그린 재사용 `PaperPlaneIcon`으로 통일하며 기존 슬롯·색·투명도를 유지합니다. 다음 SNS 화면에는 인트로의그래서/로고를 다시 넣지 않습니다.
-- THE GAP은 건축적 light artwork와 동등한 두 선택을 유지합니다. 조건 문구·light·CTA와 arrow 묶음은 각 panel 중앙축을 공유합니다. 돌아가기 → `#hero`, 시간 선택 → `#how-it-works`입니다. 요청된 문장 “열기 전, 무엇 때문에 열었는지 떠올려 보세요.”는 제거하며 대체 문구를 추가하지 않습니다.
-- TIME SELECT는 실제10분 wheel mockup을 유지하고 swipe/tap/키보드로5/10/15분을 선택할 수 있습니다.
-- PRAYER는 Dark section과 원본 Puzz를 유지합니다. 각 단계의 빛 중심은 **01 PAUSE20% /02 PRAY기존50% /03 CHOOSE80%**입니다. Mobile 세로 배치에서도 단계 내부를 기준으로 적용하며 긴 가로선·숫자·제목·본문·단계 위치는 유지합니다. Mobile은 원본128px figure와 해당 크기로 export된 grounding SVG를 사용합니다.
-- FAQ는 실제 fill인 **Soft Paper #F5F2F7**와 승인된7문항입니다. Mobile layer의 이름이 Dark여도 실제 배경은 Light입니다. 질문·답변 글자와 목록 간격은 사용자 요청으로 이전의85%로 줄였습니다. 첫 문항 기본 펼침, 독립 toggle과 Radix 키보드 동작을 유지합니다.
-- 신청 form은 기존8개 그룹과 validation, 제출 대기·성공·중복·오류·입력 유지·최초 오류 focus를 보존합니다. 실제 server201/status=success/receipt=true일 때만 성공 안내와 alert을 표시합니다.
-- Footer는 원래 정책 URL과 브랜드를 유지하며128×21 wordmark와 최종 간격을 적용합니다.
-
-**과거의3000ms·50% trigger·세션당1회,100% red/70% lavender, SNS100dvh 고정 명세는 현재 기준이 아닙니다.** 또한 모든 카드가 위로 흐르는15초 규칙과 전체 네이비 인트로는 이번 네 항목 명세로 대체했습니다. 과거 변경·PASS·release 이력은 보존하되 현재 동작은 이 README와 FOUR_INTERACTIONS_PATCH.md를 따릅니다.
-
-## Tech Stack
-
-| 기술 | 현재 사용 |
-| --- | --- |
-| Next.js / React | Next.js16.4.5 App Router, React19.3.1 |
-| TypeScript / Tailwind | TypeScript, Tailwind4.3.4, CSS tokens |
-| shadcn/ui | 실제 Radix Accordion·Slot·CVA 기반 Button, PrayTime styling |
-| Supabase | 기존 Lovable 저장소, supabase-js2.119.0 |
-| Quality | ESLint, TypeScript, Vitest, Playwright / Google Chrome |
-
-shadcn/ui는 프로젝트에서 소유하는 컴포넌트 소스로 사용하며 stock theme로 초기화하지 않습니다. native selection controls와 기존 form/API를 유지합니다. [도입 근거](docs/SHADCN_ADOPTION.md).
-
-## 설치와 검증
-
-`package.json`이 있는 이 디렉터리가 프로젝트 루트입니다. Node.js24.x와 npm11을 사용합니다. 실제 환경 파일이 이미 있으면 덮어쓰지 않습니다.
-
-```sh
-npm ci
-cp config/environment.example .env.local
-npm run dev
-```
-
-기본 로컬은 `http://127.0.0.1:3000`이며 persistence가 disabled입니다. 유효한 신청도 저장되지 않고503을 반환합니다. 가짜 성공을 표시하지 않습니다.
-
-```sh
-npm run lint
-npm run typecheck
-npm run test
-npm run build -- --webpack
-npm run test:e2e
-```
-
-이 환경에서 기본 Turbopack worker 포트가 EPERM으로 실패한 이력이 있어 production build는 공식 일회성 `--webpack` 옵션으로 확인합니다. build script나 Vercel 설정은 변경하지 않았습니다. 브라우저 테스트는 별도 서버에서 persistence를 강제로 disabled하고 실제 저장 없이 mock/disabled 경로로 검증합니다.
-
-현재 네 항목 QA는1440/393/360px 실제 화면, SNS 두 주기 이상(42.857초 초과)의 양방향 반복·중복 사진·입자,0.7배 실제 속도, 종이비행기, 단계별 빛20/50/80%, 흰색그래서→빛→실제 로고+은 순서를 확인합니다. reduced-motion·진입 시점·pause/cleanup과 기존 navigation·CTA·wheel·FAQ·form, overflow·overlap·console도 회귀 검사합니다. 최신 결과는 [네 항목 검증 기록](docs/FOUR_INTERACTIONS_PATCH.md), 과거 전체 검증은 [기존 검증 표](docs/WHOLE_PAGE_FINAL.md#최종-통합-검증과-release)에 구분해 기록합니다.
-
-## Backend와 데이터 안전
-
-`BetaSignupForm → POST /api/beta-signup → validation + server consent metadata → SignupStore → Supabase public.beta_signups`.
-
-**기존 Production 접수는 LIVE 상태로 유지합니다.** 승인된 고지 정정·실제 접수 활성화는 이전 작업에서 완료했으며 이번 시각 작업에서 이를 끄거나 backend/env를 변경하지 않습니다. Preview·자동 테스트·기본 로컬은 disabled를 유지합니다. 통계 완료 latch를 웹스토리지에 저장하지 않는 조건은 Production 신청 저장과 별개입니다.
-
-기존 `UNIQUE(email)`, INSERT 전용 RLS, server consent timestamp/policy version/source, Privacy URL, 중복·오류 처리와 실제 receipt 확인을 보존합니다. 새 DB·migration·RLS 변경·service-role key·공개 SELECT/UPDATE/DELETE·기존 신청자 조회/수정은 없습니다. **이번 whole-page QA의 실제 Production POST와 실제 INSERT는0건**입니다. 공개 시각 QA는 신청 endpoint를 차단하고 GET으로 확인합니다.
-
-활성화의 과거 승인·검증 이력은 [BACKEND_ACTIVATION.md](docs/BACKEND_ACTIVATION.md)에 있습니다. 과거 문서의 개인정보 고지 미승인·Production 저장 OFF 서술은 활성화 전 기록입니다.
-
-| 환경변수 | 용도 |
-| --- | --- |
-| `BETA_SIGNUP_PERSISTENCE` | Production은 승인된 `supabase`, Preview/tests/default local은 `disabled` |
-| `SUPABASE_URL` | 기존 프로젝트의 서버 endpoint |
-| `SUPABASE_PUBLISHABLE_KEY` | 기존 INSERT용 public key, 서버 환경에만 설정 |
-| `SUPABASE_ANON_KEY` | legacy fallback, 필요한 경우만 사용 |
-| `SITE_URL` | metadata origin override, 없으면 Vercel system origin fallback |
-
-모든 `.env*`는 Git에서 제외합니다. 키 값·`NEXT_PUBLIC_` Supabase 변수·service-role key를 코드나 문서에 넣지 않습니다. 현재 privacy approval gate와 게시된 정책 URL을 유지합니다.
+Node.js 24.x, Next.js 16.4.5 App Router, React 19.3.1, TypeScript 5.9.3, Tailwind 4.3.4, 기존 Radix 기반 shadcn/ui, Supabase JS 2.119.0, Zod 4.6.7, Vitest 4.1.12, Playwright 1.64.1. 기존 패키지와 lockfile을 유지합니다. package 이름 `praytime-mission5`도 호환성을 위해 유지했습니다.
 
 ## 프로젝트 구조
 
 ```text
-AGENTS.md                     최신 작업 우선순위와 안전 범위
-docs/WHOLE_PAGE_FINAL.md       현재 전체 Landing 변경·보존·최종 검증
-docs/PRAYTIME_PRODUCT.md       제품 정의
-docs/PRAYTIME_DESIGN.md        브랜드·디자인 가드레일
-docs/MISSION5_LANDING.md       미션 기준과 과거 이력
-src/app/                      page 조립, layout, API
-src/components/landing/       section·motion·form, whole-page CSS 보정
-src/components/ui/            shadcn Button·Accordion, native selection control
-src/lib/                      validation·mapping·consent·store·metadata
-public/assets/, public/fonts/ 승인 Figma 에셋과 로컬 폰트
-supabase/                     기존 migration 이력, 실행하지 않은 drafts
-tests/                        unit·browser 검증
-config/environment.example    값이 없는 환경 템플릿
+src/app/                     기존 랜딩, admin/prayers, prayers, api
+src/components/landing/      보존한 랜딩
+src/components/prayers/      CMS·공개 체험 공통 UI
+src/lib/prayers/             계약·검증·게이트·서버·repository
+src/proxy.ts                 관리자 HTTP 접근 게이트
+data/prayer_guides_ko.json   native와 바이트 단위로 같은 원본 100개
+scripts/import-prayers.mjs   검증·dry-run·멱등 import
+supabase/migrations/         기존 이력 + Mission 6 추가 migration
+tests/                      기존 검사 + CMS/API/import/UI 검사
+docs/mission6/              설계·원본 감사·QA·접근 설정
 ```
 
-## 배포와 보존 항목
+## Supabase 데이터 모델
 
-기존 Vercel `glorifier1/praytime-mission5` 프로젝트와 `feature/mission-5-landing`을 유지합니다. 전체 비교 release834b5b0과 이후 Header CTA·0.8배 속도 수정은 과거 기준선입니다. 현재 네 항목 패치는 직전15초 속도의0.7배와 열 교차를 사용합니다. 최신 code commit·deployment·배포 후 결과는 [기존 PR #1](https://github.com/jhyglory/praytime-mission5/pull/1)과 [FOUR_INTERACTIONS_PATCH.md](docs/FOUR_INTERACTIONS_PATCH.md)에서 관리합니다. 과거 release별 검증은 [WHOLE_PAGE_FINAL.md](docs/WHOLE_PAGE_FINAL.md)에 보존합니다.
+별도 **PrayTime CMS** 프로젝트의 기존 `public.prayers`를 재사용합니다. 원본과 일치하는 100개 행을 백업·비교한 뒤 additive migration을 적용했습니다. 테이블 재생성이나 원본 기도문 덮어쓰기는 하지 않습니다.
 
-사용자 지정 공유 이미지는 `/og/praytime-share-8b6783f5.png` 원본1711×919를 유지합니다. favicon은 투명 배경의 Signal Red Pause Mark입니다. 기존 noindex, metadata, Privacy URL과 custom-domain DNS는 변경하지 않습니다. Figma 파일 수정, 새 기능·dependency·DB, main 변경과 merge는 이번 작업 범위에 없습니다.
+| 필드 | 설명 |
+| --- | --- |
+| id | 내부 UUID PK |
+| source_key | 고유 원본 연결 키; native 문자열 ID 보존 |
+| title / content | 제목 / 기도문 본문 |
+| category / category_full | 짧은 카테고리 / 전체 이름 |
+| keyword | 원본의 단일 키워드 문자열 |
+| scripture_ref / scripture_text | 성경 참조 / 구절 원문 |
+| language | 현재 ko |
+| status | draft / published; 기본 draft |
+| image_path | private bucket 내부의 안전한 UUID 경로 또는 null |
+| source_payload | 원본 provenance; 공개 API/anon 열 권한에서 제외 |
+| source_order | native 배열 순서 0–99; 새 CMS 행은 null |
+| created_at / updated_at | 서버 시각; 수정 trigger |
 
-배포할 때는 기존 Vercel 프로젝트의 Root Directory를 이 `package.json` 디렉터리로 지정하고 Next.js framework detection을 사용합니다. 설치는 `npm ci`, 기본 build는 `npm run build`이며, 이 실행 환경의 포트 제한 검증에는 `npm run build -- --webpack`을 사용합니다. Production 환경변수는 기존 승인값을 유지하고 Preview에는 persistence를 활성화하지 않습니다. 같은 feature branch를 push한 뒤 기존 프로젝트에서 검증된 source를 Production으로 배포합니다. 자세한 확인 항목은 [Vercel 배포 체크리스트](VERCEL_DEPLOYMENT_CHECKLIST.md)를 참고하세요.
+새 CMS 등록의 private provenance에는 최초 생성 요청 지문도 저장해 동일 요청 ID로 다른 내용을 재전송하는 충돌을 구분합니다. 기존 native 100개 payload는 그대로 유지합니다.
 
-## Known limitations
+[필드 매핑·원본 보존·import 규칙](docs/mission6/DATA_MODEL.md) · [두 플랫폼 JSON 감사](docs/mission6/JSON_AUDIT.md)
 
-- Chromium의 실제 responsive rendering으로1440/393/360px를 검증합니다. 물리 iPhone/Android와 Safari의 별도 수동 검수는 수행 범위와 구분해 기록합니다.
-- 앱 사용 제한과 실제 기도 기능은 Mission6 MVP 범위입니다. Landing의 시간 선택 mockup은 제품 설명용 preview입니다.
-- 이번 시각 작업은 실제 신청을 추가하지 않습니다. form 성공/중복/실패 회귀는 mock/disabled 저장소로 확인하며, 과거 실제 저장 검증은 backend 문서를 참고합니다.
-- 저장소는 public입니다. 평가자는 로그인이나 별도 초대 없이 PR과 소스를 확인할 수 있습니다. 멘토 리뷰 전 merge하지 않습니다.
+### Migration 실행
+
+이번 프로젝트용 SQL은 `supabase/migrations/20261117075425_mission6_prayer_cms.sql`입니다. SQL Editor에서 **PrayTime CMS Demo 프로젝트**를 확인한 뒤 이 파일만 실행합니다. 이 작업에서는 연결된 Supabase migration 도구로 적용했습니다.
+
+**기존 Mission 5 migration까지 일괄 실행하는 기본 `supabase db push`는 사용하지 마세요.** 기존 신청 DB에 연결하거나 이전 SQL을 다른 프로젝트에 적용하지 않습니다. 기존 데이터가 있으면 백업과 필드 비교부터 수행합니다.
+
+## Storage
+
+기존 `prayer-covers` bucket은 **private**, 허용 MIME은 JPEG/PNG/WebP, 최대 크기는 2MB입니다. bucket 생성·변경·파일 정리는 Storage API로 수행하며 storage 테이블에 직접 INSERT/DELETE하지 않습니다.
+
+- 서버가 MIME·magic bytes·크기를 검증합니다.
+- 경로: `prayers/<기도문 UUID>/<파일 UUID>.<jpg|png|webp>`.
+- 새 이미지 업로드와 DB 연결 후에만 이전 파일을 정리합니다.
+- DB 저장 실패·불확실한 응답에서는 참조 여부를 확인해 업로드 보상 처리 또는 수동 확인 경고를 제공합니다.
+- 공개 사용자는 published 행에 연결된 표지만 짧은 서명 URL로 조회합니다. 기존 서명 URL은 게시 중지 뒤에도 만료까지 유효할 수 있습니다.
+- 표지 없는 기도문도 정상적으로 사용할 수 있습니다.
+
+새 Demo 프로젝트를 준비할 때만 Storage Dashboard/API에서 같은 이름의 private bucket을 생성하고 2MB·MIME 제한을 설정합니다. 공개 INSERT/UPDATE/DELETE 정책은 만들지 않습니다.
+
+## 환경 변수
+
+실제 값은 Git·README·브라우저에 기록하지 않습니다. [.env.example](.env.example)을 복사하고 서버 전용 키는 `NEXT_PUBLIC_` 접두사를 사용하지 않습니다.
+
+| 이름 | 용도 |
+| --- | --- |
+| PRAYER_SUPABASE_URL | 별도 CMS Demo 프로젝트 URL |
+| PRAYER_SUPABASE_PUBLISHABLE_KEY | RLS가 적용되는 공개 읽기 키 |
+| PRAYER_SUPABASE_SECRET_KEY | 서버 전용 Secret 또는 legacy service_role |
+| CMS_ADMIN_MODE | disabled / local / protected-demo |
+| CMS_DEMO_ENV | 비민감 Demo 전용 확인; 관리자 모드에는 true 필요 |
+| CMS_DEPLOYMENT_PROTECTION | 접근 제한을 실제 확인한 Preview에서만 verified |
+| CMS_ADMIN_ACCESS_KEY | 보호된 Demo의 비공개 공유 게이트 키; 최소 32자 |
+| BETA_SIGNUP_PERSISTENCE | 로컬·QA에서는 disabled 유지 |
+| SUPABASE_URL / SUPABASE_PUBLISHABLE_KEY / SUPABASE_ANON_KEY | 기존 신청 어댑터 전용; CMS와 혼용 금지 |
+| SITE_URL | 배포 시 본인의 사이트 origin |
+
+## 로컬 실행
+
+```bash
+node --version
+npm ci
+cp .env.example .env.local
+# CMS Demo의 키를 .env.local에 저장
+# CMS_ADMIN_MODE=local, CMS_DEMO_ENV=true 설정
+npm run dev -- --port 3106
+```
+
+서버는 기본적으로 `127.0.0.1`에 바인딩됩니다. 환경 파일은 Git에서 제외됩니다. CMS 키가 없으면 명확한 연결 오류를 표시하고 가짜 데이터로 대체하지 않습니다.
+
+## 기존 JSON Import
+
+iOS·Android 실제 JSON은 100개가 완전히 같았으며 원본 8개 필드와 ID를 보존합니다. native 앱의 저장 방식과 파일은 변경하지 않습니다.
+
+```bash
+npm run import:prayers -- --validate-only
+npm run import:prayers
+npm run import:prayers -- --apply
+# 원본과 정확히 일치하는 Demo 템플릿만 공개하려면:
+npm run import:prayers -- --apply --publish
+```
+
+기본은 dry-run입니다. `--apply`만 DB에 쓰며, 허용된 CMS 프로젝트를 검사합니다. 동일 source_key는 중복 생성하지 않고, CMS에서 편집된 내용은 conflict로 보고하며 덮어쓰지 않습니다. `--publish`도 원본과 정확히 같은 draft만 상태를 변경합니다. 원본·DB 개수, 주요 필드, 생성/공개/동일/충돌/실패 개수를 실제 비교합니다.
+
+## 관리자 사용
+
+`/admin/prayers`에서 목록·필터·페이지를 확인하고 등록·상세·수정·삭제를 진행합니다. 삭제는 확인 Dialog에서만 실행되며, **게시 중지(draft)**와 영구 삭제는 구분합니다. 충돌 409에서는 입력을 보존하고 최신 데이터를 확인한 뒤 다시 저장합니다.
+
+사용자별 로그인·권한 시스템은 이번 범위가 아닙니다. 관리자는 loopback 로컬 또는 별도 보호된 Demo Preview에서만 동작합니다. `protected-demo`는 Vercel Preview·Demo 확인·검증된 Deployment Protection·비공개 HTTP 게이트 키가 모두 필요합니다. 게이트는 계정 생성 없는 서비스 접근 제한입니다. 평가자에게 접근 경로와 키를 비공개로 전달하고 공개 README에는 남기지 않습니다.
+
+공개/Production/접근 제한 미확인 배포에서는 `CMS_ADMIN_MODE=disabled`로 둡니다. 사용자가 보내는 임의 헤더나 query parameter로 쓰기를 켤 수 없습니다.
+
+## 사용자 체험
+
+랜딩 PRAYER의 **기도 가이드** 링크 → `/prayers` → 카테고리·기도문 선택 → 상세 → 기도 시작 → 타이머 → 기도 마치기 → 완료 화면입니다.
+
+타이머는 시작·일시정지·계속이 가능하고 브라우저 안에서만 동작합니다. 완료 화면은 기도량이나 신앙 점수를 기록하지 않습니다. 개인 기도 내용을 입력받거나 저장하지 않습니다.
+
+## QA와 현재 연결 상태
+
+최신 실제 실행 결과는 [QA 기록](docs/mission6/QA.md)에 정리합니다. 과거 STEP 1 PASS를 이번 기능의 검증으로 대신하지 않습니다.
+
+- JSON 파일 검증: PASS, 100개·8개 카테고리·원본 SHA 일치.
+- DB migration 및 원본 비교: PASS, 기존 100개 UUID·원문 보존.
+- 공개 RLS 실연결 검사: draft 100개에서 공개 조회 0개, private provenance 조회 거부 확인.
+- 서버 키 연결 및 실제 Import dry-run/적용/재실행: PASS. 기존 100개 일치, 중복/충돌/실패 0개.
+- 실제 공개 조회·카테고리·페이지네이션·기도 체험: PASS, Desktop/Mobile에서 실제 CMS GET 사용.
+- Lint·Typecheck·Build 및 Unit 129개: PASS. Browser 검증 과정과 보정·재실행은 QA 문서에 구분합니다.
+- 실제 관리자 HTTP·DB·Storage QA 73개: PASS. 별도 QA 행/이미지는 생성·검증 후 모두 정리했고 기존 100개를 보존했습니다.
+- 보호된 Preview 배포: 최종 검증 진행 중.
+
+## 알려진 제약과 다음 단계
+
+- 실제 운영 CMS에는 아직 사용자별 관리자 인증·역할·감사 로그가 없습니다. 현재 쓰기는 비민감 Demo에 한정합니다.
+- Storage와 DB는 한 트랜잭션이 아니므로 보상 처리와 정리 경고가 있습니다. 실패 경고가 남으면 관리자 점검이 필요합니다.
+- 공개 표지는 짧은 서명 URL을 사용합니다. 게시 중지 직후의 즉시 URL 철회는 제공하지 않습니다.
+- 실물 기기·Safari·실제 모바일 네이티브 연동은 별도 검증 항목입니다.
+- Mission 7: 관리자 인증/역할, 회원 기능, 사용자별 RLS, 콘텐츠 버전·감사 기록, 모바일 읽기 API 계약과 앱 연동을 진행할 수 있습니다. 이번 미션에서 자동으로 시작하지 않습니다.
+
+제출 마감: **2026-11-23**. 미완료 배포·실연결 검증은 완료로 표시하지 않습니다.
