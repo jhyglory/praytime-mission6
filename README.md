@@ -6,8 +6,9 @@ PrayTime은 SNS를 열기 전 잠깐 멈추고 기도한 뒤, 지금 필요한 �
 
 ## 저장소와 배포
 
-- GitHub: [Mission 6 구현 브랜치](https://github.com/jhyglory/praytime-mission6/tree/feat/mission6-mentor-link-prefill)
-- 작업 브랜치: `feat/mission6-mentor-link-prefill` (멘토 전용 링크에서 두 로그인 필드 자동 입력)
+- GitHub: [Mission 6 최종 구현 브랜치](https://github.com/jhyglory/praytime-mission6/tree/feat/mission6-finalize)
+- 작업 브랜치: `feat/mission6-finalize` (전체 기능 최종 검증·제출 준비 완료)
+- [최종 완료 보고서 A–F](docs/mission6/FINAL_REPORT.md): W01–W11, 실제 DB·Storage 재검증, 제출 링크와 검수 화면.
 - 보존 기준: `5d815a08365926566cc32c0a108634302e8e05b8` ([STEP 1](docs/mission6/STEP1_BASELINE.md))
 - 공개 Vercel: [PrayTime Mission 6](https://praytime-mission6.vercel.app/) · [기도 체험](https://praytime-mission6.vercel.app/prayers)
 - 관리자: [보호된 로그인](https://praytime-mission6-admin.vercel.app/admin/login). 처음에는 비공개 전용 진입 링크로 Vercel 접근 쿠키를 받은 뒤 기존 아이디·비밀번호로 로그인합니다. [접근 구조와 평가 순서](docs/mission6/ACCESS.md)
@@ -148,7 +149,11 @@ npm run import:prayers -- --apply --publish
 
 ## QA와 현재 연결 상태
 
-최신 실제 실행 결과는 [QA 기록](docs/mission6/QA.md)에 정리합니다. 과거 STEP 1 PASS를 이번 기능의 검증으로 대신하지 않습니다.
+초기 실제 통합 검증은 [QA 이력](docs/mission6/QA.md)에 보존합니다. 과거 STEP 1 PASS를 이번 기능의 검증으로 대신하지 않습니다.
+
+최종 마감 검증은 [FINAL_REPORT.md](docs/mission6/FINAL_REPORT.md)를 기준으로 합니다.
+실제 관리자 등록·수정·게시·이미지 교체/제거·UI 삭제와 원본 100개/Storage 0 복구를 확인했습니다.
+공개 1440/393px 전체 흐름 및 768/360px 목록, UI 계약 E2E 7개·webpack Build·실제 Import dry-run도 통과했습니다.
 
 - JSON 파일 검증: PASS, 100개·8개 카테고리·원본 SHA 일치.
 - DB migration 및 원본 비교: PASS, 기존 100개 UUID·원문 보존.

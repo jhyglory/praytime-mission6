@@ -1,9 +1,9 @@
 # Mission 6 QA · 2026-11-17
 
-이 문서는 CMS 초기 통합 검증의 이력이다. 이후 연결한 실제 관리자 로그인과 현재
-접근 흐름은 [서버 세션 검증](ADMIN_SESSION_QA.md)을 따른다.
+이 문서는 CMS 초기 통합 검증의 이력이다. 제출 시점의 최종 통합 결과는
+[미션 6 최종 보고서](FINAL_REPORT.md), 현재 관리자 접근은 [멘토 전용 링크](MENTOR_LINK_PREFILL.md)를 따른다.
 
-현재 통합 검증 기록이다. 과거 미션 5/STEP 1 PASS, UI의 intercepted 응답,
+아래는 초기 통합 검증 기록이다. 과거 미션 5/STEP 1 PASS, UI의 intercepted 응답,
 실제 Supabase 결과를 구분한다. 계정 승인이 필요한 검사는 완료로 표시하지 않는다.
 
 ## 작업 기준과 보존

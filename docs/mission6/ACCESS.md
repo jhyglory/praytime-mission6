@@ -4,7 +4,8 @@
 
 - [PrayTime Mission 6](https://praytime-mission6.vercel.app/)
 - [기도 가이드](https://praytime-mission6.vercel.app/prayers)
-- [현재 구현 브랜치](https://github.com/jhyglory/praytime-mission6/tree/feat/mission6-mentor-link-prefill)
+- [최종 구현 브랜치](https://github.com/jhyglory/praytime-mission6/tree/feat/mission6-finalize)
+- [최종 완료 보고서](FINAL_REPORT.md)
 
 공개 Production은 published 기도문만 읽고 관리자 화면/API는 disabled다.
 이 배포에 CMS 서버 Secret이나 새 세션 서명키를 배치하지 않았다. 미션 5 배포·신청 데이터는 변경하지 않았다.
@@ -65,7 +66,7 @@ DELETE는 로그아웃이며 쓰기 요청에는 동일 Origin과 크기 제한�
 
 - Vercel 프로젝트는 기존 `praytime-mission6`, Node 24 / webpack을 유지한다.
 - 관리자 실행 코드 `6626ed7`, Preview `dpl_FnSgetB1N4TYVJovoL26G84rnczZ`.
-- 브랜치 `feat/mission6-mentor-link-prefill`. 실제 배포 검증은 최신 전용 링크 문서를 따른다.
+- 최종 브랜치 `feat/mission6-finalize`. 관리자 실행 코드는 위 SHA를 유지하며 최종 CRUD·Storage 검증은 완료 보고서를 따른다.
 - 공개 Production은 기존 `8b9c08d`와 disabled 관리자 모드를 유지한다.
 - 서버 자격 hash와 랜덤 `CMS_ADMIN_SESSION_SECRET`은 Preview 전용 encrypted 환경 변수다.
 - 선택적 `CMS_MENTOR_USERNAME`, `CMS_MENTOR_PASSWORD_SHA256`도 Preview 전용 encrypted 설정이다.

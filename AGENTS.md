@@ -1,5 +1,17 @@
 # PrayTime · Codex Project Instructions
 
+## Mission 6 final handoff · 2026-11-18 · current authority
+
+The user requests Mission 6 completion. Work on `feat/mission6-finalize` from clean
+`f6f16cd`. Audit the original requirements, run final local and deployed checks,
+fix required defects, and prepare the A–F completion report and submission links.
+Reversible live CRUD/Storage QA is authorized only for task-owned, nonnative Demo
+content, with before/after comparisons and cleanup. Preserve native 100 templates,
+Mission 5, signup data, public Production read-only behavior, provider protection,
+owner credentials/sessions and the approved mentor link behavior. Push only this
+Mission 6 feature branch; do not merge main or submit to an external course system.
+Keep credentials and private entry URLs outside public documentation and Git.
+
 ## Explicit mentor credential prefill · 2026-11-18 · current authority
 
 The user explicitly rejects browser-managed autofill and requests both mentor

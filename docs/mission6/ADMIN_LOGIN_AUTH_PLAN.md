@@ -36,6 +36,7 @@ Proxy 검사 외에도 각 관리자 API가 서버에서 권한을 확인한다.
 | 경로·메서드 | 동작 |
 | --- | --- |
 | `GET/HEAD /admin/login` | 허용 환경에서 브랜드 폼 표시. 이미 유효한 세션이면 고정 관리자 목록으로 이동 |
+| `GET/HEAD /admin/login/mentor` | 보호된 Preview에서만 암호화 입력용 grant 검사 → 고정 로그인으로 303. 앱 세션은 발급하지 않음 |
 | `POST /api/admin/session` | 환경·Origin·요청 크기·시도 제한·기존 자격 검증 후 세션 쿠키 발급 |
 | `GET /api/admin/session` | 실제 세션 유효 여부 확인. Basic 헤더나 UI 플래그만으로 성공하지 않음 |
 | `DELETE /api/admin/session` | 같은 Origin을 확인하고 현재 브라우저의 세션 쿠키 제거 |
@@ -52,7 +53,7 @@ Vercel 환경이 아닌 loopback 개발 서버에만 허용한다.
 
 ## 세션 형식과 보관
 
-최신 멘토 평가용 확장은 [MENTOR_ACCESS.md](MENTOR_ACCESS.md)를 따른다.
+최신 멘토 평가용 확장은 [MENTOR_LINK_PREFILL.md](MENTOR_LINK_PREFILL.md)를 따른다.
 소유자 v1 세션의 형식·서명 파생 규칙은 그대로 유지하고, 선택적 멘토 자격은 별도
 v2 / `sub: mentor` 서명을 사용한다. 기존 소유자 세션의 배포 후 유효성을 실제로 확인했다.
 아래 기존 자격 설명은 소유자에 해당하며, 멘토는 별도 Preview 전용 이름·hash를 사용한다.
@@ -61,7 +62,9 @@ v2 / `sub: mentor` 서명을 사용한다. 기존 소유자 세션의 배포 후
 `CMS_ADMIN_USERNAME`, `CMS_ADMIN_PASSWORD_SHA256`의 기존 서버 자격을 사용한다.
 사용자 지정 자격이 없을 때의 legacy 설정 규칙도 유지하며, 불완전한 사용자 지정
 설정은 legacy로 우회하지 않는다. 새 `CMS_ADMIN_SESSION_SECRET`은 32자 이상의
-무작위 서버 비밀값이다. 실제 값·비밀번호 원문·digest는 브라우저에 전달하지 않는다.
+무작위 서버 비밀값이다. 소유자 비밀번호·자격 digest·세션 secret은 브라우저에 전달하지 않는다.
+사용자가 명시적으로 승인한 멘토 전용 링크에서만 grant를 검증해 멘토 비밀번호를 폼에 전달한다.
+이 예외를 일반 로그인 페이지·소유자 자격·정적 JS로 확대하지 않는다.
 
 세션은 고정 HMAC-SHA256 프로토콜로 서명한다. 서명키는 무작위 세션 secret과 현재
 사용자 이름·비밀번호 hash에서 파생한다. 읽을 수 있는 payload에는 버전, 발급·만료
