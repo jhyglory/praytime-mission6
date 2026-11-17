@@ -2,6 +2,10 @@
 
 ## Admin login UI review · 2026-11-17 · current authority
 
+The user approved the current design on 2026-11-17 at Checkpoint 3 (UI commit
+`6b05380`). This approves the visual design only; it does not authorize an
+authentication replacement, remote push, or deployment.
+
 Build the branded frontend at `/admin/login` on `feat/mission6-admin-login-ui`,
 starting from clean `18dcaf5`. Reuse actual PrayTime assets, fonts and tokens.
 The page stays behind the existing Proxy and service gateway. Do not change

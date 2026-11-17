@@ -160,7 +160,7 @@ npm run import:prayers -- --apply --publish
 
 ## 알려진 제약과 다음 단계
 
-- 관리자 로그인 UI는 별도 `feat/mission6-admin-login-ui` 브랜치에서 로컬 디자인 검수 중입니다.
+- 관리자 로그인 UI는 별도 `feat/mission6-admin-login-ui` 브랜치에서 2026-11-17 사용자 디자인 승인을 받았습니다.
   `/admin/login`의 이메일 인증은 미연결이며 기존 배포·HTTP 게이트는 유지합니다.
   [화면·실행·QA](docs/mission6/ADMIN_LOGIN_QA.md) · [향후 인증 계획](docs/mission6/ADMIN_LOGIN_AUTH_PLAN.md).
 - 실제 운영 CMS에는 아직 사용자별 관리자 인증·역할·감사 로그가 없습니다. 현재 쓰기는 비민감 Demo에 한정합니다.

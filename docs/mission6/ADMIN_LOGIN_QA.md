@@ -85,6 +85,8 @@ Local/session Storage는 비어 있고 테스트 비밀번호를 저장하지 �
 
 ## 검수 단계
 
-사용자가 요청한 Checkpoint 3의 디자인 검수를 기다린다. 디자인 승인은 관리자 인증
-교체나 Production 배포 승인이 아니다. [디자인 근거](ADMIN_LOGIN_DESIGN.md)와
-[향후 인증 연결 계획](ADMIN_LOGIN_AUTH_PLAN.md)을 함께 검토할 수 있다.
+2026-11-17 사용자가 Checkpoint 3에서 “현재 디자인 승인”으로 응답했다.
+승인된 UI 코드는 `6b05380`이며 네 viewport의 최종 캡처를 기준으로 한다.
+이번 승인은 화면 디자인에 한정하며 관리자 인증 교체·Production 배포를 승인한 것이 아니다.
+이메일 인증은 미연결·제출 비활성 상태를 유지하고, 승인 기록 외 UI/인증 코드는 변경하지 않는다.
+[디자인 근거](ADMIN_LOGIN_DESIGN.md)와 [향후 인증 연결 계획](ADMIN_LOGIN_AUTH_PLAN.md)을 참고한다.
