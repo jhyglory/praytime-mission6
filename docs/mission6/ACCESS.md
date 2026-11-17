@@ -1,67 +1,69 @@
-# Mission 6 배포와 평가자 접근
+# Mission 6 배포와 관리자 접근
 
 ## 공개 기도 체험
 
 - [PrayTime Mission 6](https://praytime-mission6.vercel.app/)
 - [기도 가이드](https://praytime-mission6.vercel.app/prayers)
-- [개발 브랜치와 README](https://github.com/jhyglory/praytime-mission6/tree/feat/mission6-prayer-cms)
+- [현재 구현 브랜치](https://github.com/jhyglory/praytime-mission6/tree/feat/mission6-admin-session-login)
 
-공개 Production은 실제 published 기도문을 읽지만 관리자 화면/API는 403으로 차단한다.
-서버 Secret은 이 Production에 배치하지 않았다. 미션 6 데모의 기존 사전예약 저장은
-disabled이며, 미션 5 원본 Production·신청 저장소는 변경하지 않았다.
+공개 Production은 published 기도문만 읽고 관리자 화면/API는 disabled다.
+이 배포에 CMS 서버 Secret이나 새 세션 서명키를 배치하지 않았다. 미션 5 배포·신청 데이터는 변경하지 않았다.
 
-## 보호된 평가용 관리자
+## 보호된 관리자 로그인
 
-[관리자 Preview](https://praytime-mission6-admin.vercel.app/admin/prayers)는
-별도의 비민감 Demo이다. 프로젝트 접근 제한과 서비스 HTTP 게이트를 모두 통과해야 한다.
-사용자별 계정·회원가입·앱 로그인·역할 테이블을 구현한 것이 아니다.
+[로그인 화면](https://praytime-mission6-admin.vercel.app/admin/login)은 별도 비민감 Demo Preview다.
+처음에는 비공개 전용 진입 링크로 프로젝트 접근 쿠키를 받은 뒤 같은 브라우저에서 로그인한다.
+그냥 일반 주소를 새 브라우저에서 열면 Vercel 로그인 화면이 먼저 나올 수 있다.
+이는 앱 아이디·비밀번호 오류가 아니다. 전용 링크는 Vercel 계정 없이 접근 쿠키를 설정한다.
 
-실제 접근 검증:
+전용 링크와 기존 아이디·비밀번호는 저장소 밖 소유자용 `MISSION6_REVIEW_ACCESS.txt`에만 보관한다.
+공개 README, Git, 앱 소스에 쓰지 않는다. 이 안내에 Supabase 서버 키와 Vercel 계정 토큰은 포함하지 않는다.
 
-| 요청 | 결과 |
+실제 접근 순서:
+
+`비공개 진입 링크 → Vercel 접근 쿠키 → 브랜드 로그인 → 서버 자격 검증 → 앱 세션 쿠키 → 관리자 목록`
+
+기존에 정한 아이디를 사용하며 이메일 계정을 임의 생성하지 않는다. 성공 응답 후 브라우저가
+실제 쿠키를 수용했는지 GET 세션 확인까지 통과해야 관리자 화면으로 이동한다.
+
+| 상태 | 동작 |
 | --- | --- |
-| 아무 접근 정보 없음 | Vercel 인증으로 302 |
-| Vercel 접근만 통과 | 앱 게이트 401 |
-| 잘못된 앱 게이트 키 | 401 |
-| 두 제한을 모두 통과 | 관리자 목록 200, 실제 100개 조회 |
-| 공개 Production의 관리자 API | 403 |
+| Vercel 접근 쿠키 없음 | Vercel 접근 제한 유지 |
+| Provider 통과, 앱 세션 없음 | 로그인 화면 200, 관리자 화면은 로그인으로 303 |
+| 잘못된 아이디 또는 비밀번호 | 세션 발급 없이 401 |
+| 서버 검증 성공 | HttpOnly·Secure·SameSite=Lax·host-only·Path=/ 쿠키, 최대 8시간 |
+| 유효한 앱 세션 | 관리자 목록·API 접근 |
+| 무세션 CMS API | 401, Basic 팝업 없음 |
+| 명시적 기존 Basic API 요청 | 호환 도구용으로 유지; 관리자 페이지는 세션 필요 |
+| 로그아웃 | 앱 쿠키 제거, 로그인 복귀; Vercel 접근 쿠키는 유지 |
+| 공개 Production 관리자 API | 403 |
 
-평가용 링크·게이트 키는 저장소와 공개 README에 포함하지 않는다. 소유자에게 별도로
-전달한 로컬 `MISSION6_REVIEW_ACCESS.txt`에만 안내한다. Supabase Secret/Service Role과
-Vercel 계정 토큰은 이 안내에도 들어 있지 않다.
+로그인 endpoint는 정확히 `/api/admin/session`이다. POST는 서버 자격 검증, GET은 세션 확인,
+DELETE는 로그아웃이며 쓰기 요청에는 동일 Origin과 크기 제한을 적용한다. 이 endpoint 예외가
+기도문 데이터 접근 권한을 부여하지 않는다. 공개 모드나 보호 미확인 배포에서는 endpoint도 차단한다.
 
-비공개 평가 링크는 브라우저에 프로젝트 접근 쿠키를 설정한 뒤 앱 HTTP 게이트로 이동한다.
-게이트의 사용자 이름과 비밀번호는 비공개 안내를 따른다. 평가자는 앱 회원가입 없이
-CRUD를 확인할 수 있다. 브라우저가 인증을 기억하면 새 비공개 창에서 다시 확인한다.
+## 평가 순서
 
-## 권장 평가 순서
+1. 비공개 안내의 전용 진입 링크를 같은 브라우저에서 연다.
+2. 브랜드 로그인 화면에 기존 아이디·비밀번호를 입력한다.
+3. 실제 목록과 새로고침을 확인한다. 콘텐츠 평가는 별도 비민감 QA 기도문으로 진행한다.
+4. 로그아웃 후 관리자 화면과 API가 차단되는지 확인한다.
+5. 다른 브라우저·다른 배포 hostname에서는 전용 진입과 로그인을 다시 수행한다.
 
-1. 별도의 비민감 QA 기도문을 새로 등록한다. 기존 native 100개를 삭제할 필요가 없다.
-2. 초안으로 저장하고 새로고침·관리자 상세·목록을 확인한다.
-3. 제목·본문·카테고리·성경 구절을 수정하고 대표 이미지를 업로드한다.
-4. 게시 상태로 변경하고 사용자 상세/목록에서 실제 반영을 확인한다.
-5. 사용자 기도 시작·정지·계속·마치기·완료 화면을 확인한다.
-6. 이미지 교체/제거와 게시 중지를 확인한다. 게시 중지와 영구 삭제는 다르다.
-7. 생성한 평가용 콘텐츠만 확인 Dialog를 거쳐 삭제하고 재조회한다.
+## 설정과 한계
 
-평가 완료 후 공유 접근을 회수하거나 게이트 키를 교체하려면 Mission 6 프로젝트의
-Deployment Protection/Preview 환경 설정에서 처리하고 새 Preview를 배포한다.
-미션 5 프로젝트, 원본 native 파일, 신청 데이터, 공개 RLS를 변경하지 않는다.
+- Vercel 프로젝트는 기존 `praytime-mission6`, Node 24 / webpack을 유지한다.
+- 관리자 실행 코드 `e2b22b5`, Preview `dpl_DN8FE4jUAhfmLRv7VFK1SJBiTE36`.
+- 공개 Production은 기존 `8b9c08d`와 disabled 관리자 모드를 유지한다.
+- 서버 자격 hash와 랜덤 `CMS_ADMIN_SESSION_SECRET`은 Preview 전용 encrypted 환경 변수다.
+- 브라우저 localStorage/sessionStorage에 인증 비밀을 저장하지 않는다.
+- 앱의 실패 카운터는 인스턴스별 5회/60초다. 정확한 관리자 host/session POST만 대상으로 한
+  별도 Vercel WAF 10회/60초 규칙은 설정했지만 Preview에서의 실제 제한 효과는 확정하지 않았다.
+- stateless 토큰의 복사본 개별 철회는 만료 전까지 제공하지 않는다. 자격/서명키를 교체하면
+  해당 설정을 쓰는 배포의 기존 토큰이 무효화된다. 옛 immutable 배포도 필요에 따라 퇴역해야 한다.
+- 사용자별 계정·역할·Supabase Auth·회원 관리·DB schema·Storage 변경은 하지 않았다.
 
-## 배포 설정
+[실제 로그인 검증](ADMIN_SESSION_QA.md) · [구조와 다음 인증 단계](ADMIN_LOGIN_AUTH_PLAN.md)
 
-- Vercel 프로젝트: `praytime-mission6` (기존 Mission 5와 독립).
-- Node 24.x, install `npm ci`, build `npm run build -- --webpack`.
-- Preview는 Standard Deployment Protection을 실제 확인한 뒤에만 보호된 Demo 모드를 사용한다.
-- Production의 관리자 모드는 disabled다. Header/query만으로 켤 수 없다.
-- Preview 서버용 키·접근 키는 encrypted 환경 변수이며 브라우저에 전달하지 않는다.
-- 사용자 지정 게이트는 `CMS_ADMIN_USERNAME`과 `CMS_ADMIN_PASSWORD_SHA256`으로 설정한다.
-  비밀번호 원문이나 digest는 저장소·브라우저에 포함하지 않는다. 사용자 지정 값이
-  설정되면 기존 `demo` 공유 키는 허용하지 않으며, 불완전한 설정은 접근을 차단한다.
-- 실제 HTTP·Storage 검증과 정리 결과는 [QA](QA.md)를 따른다.
-- 공개 실행 코드는 `8b9c08d`, 중앙 삭제 확인창을 적용한 관리자 실행 코드는 `60f63f1`다.
-- 최초 통합 검증은 Preview 실제 API/Storage 76개·브라우저 32개, 공개 Desktop/Mobile 및
-  Tablet 6개다. 접근 정보 변경 후 검증 결과는 [QA](QA.md)의 별도 기록을 따른다.
-
-공식 운영 참고: [Vercel Deployment Protection](https://vercel.com/docs/deployment-protection),
-[보호된 배포의 자동화 접근](https://vercel.com/docs/deployment-protection/methods-to-bypass-deployment-protection/protection-bypass-automation).
+공식 참고: [Vercel 보호 쿠키 진입](https://vercel.com/docs/deployment-protection/methods-to-bypass-deployment-protection/protection-bypass-automation),
+[Next.js 인증](https://nextjs.org/docs/app/guides/authentication).

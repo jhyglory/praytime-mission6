@@ -1,5 +1,8 @@
 # 관리자 로그인 UI 설계
 
+초기 UI 승인 시점의 디자인 근거다. 이후 기존 아이디로 서버 세션을 연결했으며
+현재 로그인 동작과 검증은 [실제 로그인 검증](ADMIN_SESSION_QA.md)을 따른다.
+
 ## 기준과 범위
 
 작업 기준은 시작 전 clean 상태를 확인한 `18dcaf5`이며, 작업 브랜치는 `feat/mission6-admin-login-ui`다. 이번 변경은 `/admin/login`의 브랜드 스타일과 입력 UI에 한정한다. 기존 Proxy·관리자 인증·인가·세션·API 접근 정책·DB·Production 배포는 변경하지 않는다.
