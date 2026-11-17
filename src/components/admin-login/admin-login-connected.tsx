@@ -40,9 +40,9 @@ export const authenticateAdminSession: AdminLoginAuthenticator = async (credenti
   }
 };
 
-export function AdminLoginConnected() {
+export function AdminLoginConnected({ initialUsername = "" }: { initialUsername?: string }) {
   const router = useRouter();
-  return <AdminLoginForm authenticate={authenticateAdminSession} onAuthenticated={() => {
+  return <AdminLoginForm initialUsername={initialUsername} authenticate={authenticateAdminSession} onAuthenticated={() => {
     router.replace("/admin/prayers");
     router.refresh();
   }} />;

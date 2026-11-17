@@ -1,5 +1,16 @@
 # PrayTime · Codex Project Instructions
 
+## Mentor evaluation access · 2026-11-18 · current authority
+
+The user authorizes a separate mentor Demo account, username prefill from its
+private entry link, a protected Preview rollout, and delivery of the link and
+separate password. Work on `feat/mission6-mentor-access` from clean `ebc2373`.
+Preserve the owner's credentials and existing owner sessions. Keep passwords
+server-only; never put a password in a URL, page, browser storage, Git or logs.
+Only the username may be prefilled, with no automatic submission/login. Keep
+Vercel protection and public Production read-only. This remains evaluation access
+to the existing Demo CMS, not a membership/roles or Supabase schema project.
+
 ## Working administrator login · current authority
 
 The user now explicitly requests working login and administrator entry. Implement

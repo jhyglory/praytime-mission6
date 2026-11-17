@@ -16,7 +16,7 @@ function enableDemo() {
 const basic = (password = demoKey) => `Basic ${Buffer.from(`demo:${password}`).toString("base64")}`;
 
 beforeEach(() => {
-  for (const name of ["CMS_ADMIN_MODE", "CMS_ADMIN_ACCESS_KEY", "CMS_ADMIN_USERNAME", "CMS_ADMIN_PASSWORD_SHA256", "CMS_DEMO_ENV", "CMS_DEPLOYMENT_PROTECTION", "VERCEL", "VERCEL_ENV"]) vi.stubEnv(name, "");
+  for (const name of ["CMS_ADMIN_MODE", "CMS_ADMIN_ACCESS_KEY", "CMS_ADMIN_USERNAME", "CMS_ADMIN_PASSWORD_SHA256", "CMS_MENTOR_USERNAME", "CMS_MENTOR_PASSWORD_SHA256", "CMS_DEMO_ENV", "CMS_DEPLOYMENT_PROTECTION", "VERCEL", "VERCEL_ENV"]) vi.stubEnv(name, "");
   vi.stubEnv("CMS_DEMO_ENV", "true");
 });
 afterEach(() => vi.unstubAllEnvs());

@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { isIP } from "node:net";
 import { getAdminAccessState, guardAdminMutationRequest } from "../prayers/admin-access";
-import { verifyAdminCredentials } from "../prayers/admin-credentials";
+import { authenticateAdminCredentials } from "../prayers/admin-credentials";
 import { adminSessionConfigured, createAdminSession, hasAdminSession, adminSessionCookie } from "../prayers/admin-session";
 import { prayerJSON } from "../prayers/errors";
 
@@ -71,8 +71,9 @@ export function createAdminSessionApi({ now = Date.now, limiter = createLoginLim
         || credentials.username.trim().length > 80 || Buffer.byteLength(credentials.password) > 1024) {
         return error(400, "INVALID_LOGIN", "아이디와 비밀번호를 확인해 주세요.");
       }
-      if (!verifyAdminCredentials(credentials.username.trim(), credentials.password)) return error(401, "INVALID_CREDENTIALS", "아이디 또는 비밀번호를 확인해 주세요.");
-      const token = createAdminSession(request, now());
+      const principal = authenticateAdminCredentials(credentials.username.trim(), credentials.password);
+      if (!principal) return error(401, "INVALID_CREDENTIALS", "아이디 또는 비밀번호를 확인해 주세요.");
+      const token = createAdminSession(request, now(), principal);
       if (!token) return error(503, "LOGIN_NOT_CONFIGURED", "관리자 로그인 연결 설정을 확인해 주세요.");
       limiter.reset(key);
       return prayerJSON({ authenticated: true }, 200, { "Set-Cookie": adminSessionCookie(token) });
